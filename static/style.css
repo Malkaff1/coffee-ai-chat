@@ -1,0 +1,530 @@
+/* ===== Dark Coffee Theme (Full) ===== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Cairo:wght@400;600&display=swap');
+
+:root {
+    /* Colors */
+    --bg-espresso-black: #0E0B09;
+    --bg-dark-wood: #11100F;
+    --bg-input: #14110F;
+    --bg-mode-btn: #1C1816;
+
+    --text-light-cream: #E8E3DD;
+    --text-off-white: #FDFBF7;
+    --text-muted-cream: #D7D0C7;
+    --text-parchment: #A89D94;
+    --text-warm-gray: #8F857C;
+    --text-placeholder: #7A726A;
+
+    --accent-coffee: #C7A17A;
+    --accent-coffee-darker: #b58f68;
+    --accent-coffee-darkest: #1A1614;
+    --accent-danger: #ff6b6b;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-espresso-black);
+    font-family: 'Inter', 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+    color: var(--text-light-cream);
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Background Glow (Warm Café Ambiance) */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+    background:
+        /* 1. Large, soft caramel glow at the top center */
+        radial-gradient(ellipse 40% 50% at 50% 0%, rgba(177, 116, 87, 0.15), transparent),
+        /* 2. Deeper espresso glow from the bottom center */
+        radial-gradient(ellipse 40% 40% at 50% 100%, rgba(74, 73, 71, 0.2), transparent),
+        /* 3. Small, subtle golden highlight in the upper-left */
+        radial-gradient(ellipse 20% 30% at 10% 10%, rgba(216, 210, 194, 0.08), transparent);
+}
+
+/* ===== LAYOUT: SIDEBAR + CHAT AREA ===== */
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ===== SIDEBAR ===== */
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 260px;
+    height: 100vh;
+    overflow-y: auto;
+
+    background: var(--bg-dark-wood);
+    border-right: 1px solid rgba(255,255,255,0.06);
+    padding: 18px 14px;
+    box-sizing: border-box;
+}
+
+/* Brand header */
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    color: var(--text-light-cream);
+    font-weight: 500;
+    font-size: 15px;
+}
+
+.brand-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: var(--accent-coffee);
+    box-shadow: 0 0 10px rgba(199,161,122,0.7);
+}
+
+.brand-name {
+    letter-spacing: 0.5px;
+}
+
+/* New Chat Button */
+.new-chat-btn {
+    width: 100%;
+    background: var(--accent-coffee);
+    border: none;
+    color: var(--accent-coffee-darkest);
+    padding: 10px 0;
+    border-radius: 999px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.new-chat-btn:hover {
+    background: var(--accent-coffee-darker);
+}
+
+/* Chat List */
+.chats-list {
+    margin-top: 8px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+}
+
+.chat-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+
+    padding: 9px 10px;
+    margin-bottom: 4px;
+    border-radius: 10px;
+
+    font-size: 14px;
+    color: var(--text-muted-cream);
+    cursor: pointer;
+    transition: 0.15s;
+}
+
+.chat-list-item:hover {
+    background: rgba(255,255,255,0.05);
+}
+
+.chat-list-item.active {
+    background: rgba(199,161,122,0.23);
+    color: var(--text-off-white);
+}
+
+.empty-sidebar-text {
+    font-size: 13px;
+    color: var(--text-placeholder);
+    margin-top: 10px;
+}
+
+/* ===== MAIN CHAT AREA ===== */
+
+.chat-area {
+    margin-left: 260px;          /* نبعد عن السايدبار */
+    padding: 24px 32px;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;      /* الهيدر + الشات + خانة الكتابة تحت */
+    min-height: 100vh;           /* تغطي الشاشة كاملة */
+}
+
+/* Logo + Title */
+.top-logo {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 12px;
+}
+
+.top-logo img {
+    width: 60px;
+    opacity: 0.85;
+    filter: drop-shadow(0 0 8px rgba(199,161,122,0.35));
+}
+
+.top-logo h1 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 26px;
+}
+
+.subtitle {
+    margin: 4px 0 18px 0;
+    color: var(--text-parchment);
+}
+
+/* ===== Answer mode buttons (Short / Detailed) ===== */
+
+.answer-mode {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.mode-btn {
+    background: var(--bg-mode-btn);
+    border: 1px solid var(--accent-coffee);
+    color: var(--accent-coffee);
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.mode-btn:hover {
+    background: var(--accent-coffee-darker);
+    color: var(--accent-coffee-darkest);
+}
+
+.mode-btn.active {
+    background: var(--accent-coffee);
+    color: var(--accent-coffee-darkest);
+}
+
+/* ===== Chat Messages ===== */
+
+.chat-box {
+    flex: 1;                     /* يخلي الشات يملأ الفراغ بين الهيدر و خانة الكتابة */
+    overflow-y: auto;
+    padding: 10px 0;
+    background: transparent !important;
+    border: none !important;
+
+    max-width: 1200px;           /* عمود المحادثة */
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* Scrollbar style */
+.chat-box::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-box::-webkit-scrollbar-thumb {
+    background-color: var(--accent-coffee);
+    border-radius: 10px;
+}
+
+.chat-box::-webkit-scrollbar-button {
+    display: none;
+}
+
+/* Animation for new messages */
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.message {
+    margin-bottom: 18px;
+    line-height: 1.8;
+    display: block;
+}
+
+.message.fade-in {
+    animation: fadeSlideIn 0.22s ease-out;
+}
+
+/* Meta (speaker + time) */
+.message-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-warm-gray);
+    margin-bottom: 3px;
+}
+
+/* النص الأساسي للرسالة */
+.message-text {
+    font-size: 20px;
+    white-space: pre-wrap;
+}
+
+/* USER (يمين) */
+.user {
+    text-align: right;
+    width: 100%;
+}
+
+.user .message-meta {
+    flex-direction: row-reverse;
+}
+
+.user .message-text {
+    text-align: right;
+    color: var(--text-light-cream);
+    max-width: 70%;        /* تحكم بعرض رسالتك */
+    margin-left: auto;     /* تلتصق باليمين */
+    display: inline-block;
+}
+
+/* ASSISTANT (يسار) */
+.assistant {
+    text-align: left;
+    width: 100%;
+}
+
+.assistant .message-text {
+    text-align: left;
+    color: var(--accent-coffee);
+    max-width: 70%;        /* تحكم بعرض رد الـ AI */
+    margin-right: auto;    /* تلتصق باليسار */
+    display: inline-block;
+}
+
+/* ===== Input Area ===== */
+
+.input-area {
+    display: flex;
+    margin-top: 16px;
+    margin-bottom: 24px;   /* مسافة صغيرة عن أسفل الصفحة */
+    margin-inline: auto;
+
+    max-width: 90%;
+    width: 100%;
+}
+
+.input-area input {
+    flex: 1;
+    padding: 14px;
+    background: var(--bg-input);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    color: var(--text-light-cream);
+    font-size: 16px;
+}
+
+.input-area input::placeholder {
+    color: var(--text-placeholder);
+}
+
+.input-area button {
+    background-color: var(--accent-coffee);
+    border: none;
+    padding: 14px 22px;
+    color: var(--accent-coffee-darkest);
+    border-radius: 12px;
+    margin-left: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.input-area button:hover {
+    background-color: var(--accent-coffee-darker);
+}
+
+/* Chat Actions (Delete) */
+.chat-actions {
+    display: flex;
+    gap: 6px;
+    opacity: 0;
+    transition: 0.2s;
+}
+.chat-list-item:hover .chat-actions {
+    opacity: 1;
+}
+.delete-btn {
+    background: transparent;
+    border: none;
+    color: var(--accent-coffee);
+    cursor: pointer;
+    font-size: 15px;
+}
+.delete-btn:hover {
+    color: var(--accent-danger);
+}
+
+/* --- Authentication Views & Forms (Themed) --- */
+
+.hidden {
+    display: none !important;
+}
+
+.auth-view {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    /* Uses the same background as the body to get the glow effect */
+}
+
+.auth-form {
+    background-color: var(--bg-dark-wood);
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 2.5rem;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    position: relative; /* This is crucial for positioning the error message */
+    text-align: center;
+}
+
+.auth-form h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--text-off-white);
+}
+
+.auth-form .auth-subtitle {
+    color: var(--text-parchment);
+    margin-bottom: 2rem;
+}
+
+.auth-form input {
+    width: 100%;
+    padding: 12px 16px;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background-color: var(--bg-input);
+    color: var(--text-light-cream);
+    font-size: 1rem;
+}
+
+.auth-form button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--accent-coffee);
+    color: var(--accent-coffee-darkest);
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.auth-form button:hover {
+    background-color: var(--accent-coffee-darker);
+}
+
+.auth-form .auth-switch {
+    margin-top: 1.5rem;
+    color: var(--text-warm-gray);
+}
+
+.auth-form .auth-switch a {
+    color: var(--accent-coffee);
+    text-decoration: none;
+    font-weight: 500;
+}
+.auth-form .auth-switch a:hover {
+    text-decoration: underline;
+}
+
+.error-message {
+    position: absolute; /* Take the element out of the document flow */
+    bottom: 50px; /* Position it above the "switch" link */
+    left: 0;
+    right: 0;
+    padding: 0 2.5rem; /* Match the form's horizontal padding */
+
+    color: var(--accent-danger);
+    font-size: 0.9rem;
+    line-height: 1.3;
+    opacity: 0; /* Hidden by default */
+    transition: opacity 0.2s ease-in-out;
+    pointer-events: none; /* Prevent it from blocking clicks when invisible */
+}
+
+.success-message {
+    /* Apply the same positioning as the error message */
+    position: absolute;
+    bottom: 50px;
+    left: 0;
+    right: 0;
+    color: #4ade80;
+    font-size: 0.9rem;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    pointer-events: none;
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    padding: 16px 0;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+#username-display {
+    color: var(--text-muted-cream);
+    font-weight: 500;
+}
+
+#logout-btn {
+    background: none;
+    border: 1px solid var(--accent-danger);
+    color: var(--accent-danger);
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+#logout-btn:hover {
+    background-color: var(--accent-danger);
+    color: var(--bg-dark-wood);
+}
+
+/* Make error/success messages visible only when they are not empty */
+.error-message:not(:empty), .success-message:not(:empty) {
+    opacity: 1;
+    pointer-events: auto; /* Allow text selection when visible */
+}
+
+
+
+
+
+
+

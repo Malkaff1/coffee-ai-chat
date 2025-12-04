@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coffee AI Assistant - Sign In</title>
+    <style>
+    
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{
+            --bg-espresso:#0F0C0A;
+            --bg-charcoal:#1A1714;
+            --bg-input:#2A241F;
+            --accent-coffee:#C7A17A;
+            --accent-coffee-hover:#B58F68;
+            --text-cream:#E8E3DD;
+            --text-muted:#A89D94;
+        }
+        body{
+            background:var(--bg-espresso);
+            color:var(--text-cream);
+            font-family:'Inter','Segoe UI',sans-serif;
+            min-height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            overflow:hidden;
+        }
+        body::before{
+            content:"";
+            position:fixed;
+            inset:0;
+            pointer-events:none;
+            z-index:0;
+            background:
+                radial-gradient(ellipse 50% 60% at 50% 0%,rgba(199,161,122,.12),transparent),
+                radial-gradient(ellipse 45% 50% at 50% 100%,rgba(26,23,20,.4),transparent),
+                radial-gradient(ellipse 30% 40% at 15% 20%,rgba(199,161,122,.06),transparent)
+        }
+        .auth-container{
+            position:relative;
+            z-index:1;
+            width:100%;
+            max-width:420px;
+            padding:20px;
+        }
+        .auth-card{
+            background:linear-gradient(135deg,rgba(26,23,20,.7),rgba(26,23,20,.6));
+            border:1px solid rgba(199,161,122,.15);
+            backdrop-filter:blur(20px);
+            border-radius:20px;
+            padding:40px 36px;
+            box-shadow:0 20px 60px rgba(0,0,0,.4),inset 0 0 30px rgba(199,161,122,.05);
+        }
+        .logo-section{
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            gap:16px;
+            margin-bottom:32px;
+        }
+        .logo-icon{
+            width:60px;height:60px;
+            background:linear-gradient(135deg,var(--accent-coffee),#D4A574);
+            border-radius:16px;
+            display:flex;align-items:center;justify-content:center;
+            font-size:32px;
+            box-shadow:0 12px 24px rgba(199,161,122,.3);
+        }
+        .logo-text{
+            font-size:24px;font-weight:700;
+            background:linear-gradient(to right,var(--accent-coffee),#D4A574);
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+        }
+        .auth-title{font-size:24px;font-weight:700;text-align:center;color:var(--text-cream);margin-bottom:12px}
+        .auth-subtitle{font-size:13px;text-align:center;color:var(--text-muted);margin-bottom:28px}
+        .form-group{display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
+        .form-label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted)}
+        .input-field{
+            background:var(--bg-input);
+            border:1px solid rgba(199,161,122,.2);
+            border-radius:12px;
+            padding:14px 16px;
+            color:var(--text-cream);
+            font-size:14px;
+            transition:all .3s ease;
+            font-family:inherit;
+        }
+        .input-field::placeholder{color:rgba(232,227,221,.4)}
+        .input-field:focus{
+            outline:none;border-color:var(--accent-coffee);
+            background:rgba(42,36,31,.95);
+            box-shadow:0 0 20px rgba(199,161,122,.2),inset 0 0 10px rgba(199,161,122,.05);
+        }
+        .submit-btn{
+            width:100%;
+            background:linear-gradient(135deg,var(--accent-coffee),#D4A574);
+            color:#1A1714;border:none;
+            padding:14px 16px;border-radius:12px;
+            font-weight:700;font-size:14px;
+            cursor:pointer;transition:all .3s ease;
+            box-shadow:0 8px 20px rgba(199,161,122,.25);
+            text-transform:uppercase;letter-spacing:.5px;
+        }
+        .submit-btn:hover{
+            background:linear-gradient(135deg,#D4A574,var(--accent-coffee));
+            transform:translateY(-2px);
+            box-shadow:0 12px 28px rgba(199,161,122,.35);
+        }
+        .submit-btn:active{transform:translateY(0)}
+        .auth-switch{text-align:center;font-size:13px;color:var(--text-muted);margin-top:20px}
+        .auth-switch a{color:var(--accent-coffee);text-decoration:none;font-weight:600;transition:all .2s}
+        .auth-switch a:hover{color:#D4A574;text-decoration:underline}
+        .error-message,.success-message{
+            padding:12px 14px;border-radius:10px;font-size:13px;margin-bottom:16px;display:none;
+        }
+        .error-message{background:rgba(255,107,107,.1);border:1px solid rgba(255,107,107,.3);color:#FF8787}
+        .success-message{background:rgba(76,222,128,.1);border:1px solid rgba(76,222,128,.3);color:#51CF66}
+        .error-message.show,.success-message.show{display:block;animation:slideIn .3s ease}
+        @keyframes slideIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+        .hidden{display:none!important}
+        @media(max-width:480px){
+            .auth-card{padding:28px 20px}
+            .auth-title{font-size:20px}
+            .logo-icon{width:50px;height:50px;font-size:28px}
+            .logo-text{font-size:20px}
+        }
+    </style>
+</head>
+<body>
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="logo-section">
+          
+            <div class="logo-text">Coffee AI Assistant</div>
+        </div>
+
+        <!-- LOGIN -->
+        <div id="login-section">
+            <h2 class="auth-title">Welcome Back</h2>
+            <p class="auth-subtitle">Sign in to continue your coffee journey</p>
+
+            <div id="login-error" class="error-message"></div>
+            <div id="login-success" class="success-message"></div>
+
+            <form id="login-form">
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+<input type="email" id="login-email" class="input-field" placeholder="you@example.com" required />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" id="login-password" class="input-field" placeholder="Enter your password" required />
+                </div>
+                <button type="submit" class="submit-btn">Sign In</button>
+            </form>
+
+            <div class="auth-switch">
+                Don't have an account? <a href="#" id="switch-to-register">Create one</a>
+            </div>
+        </div>
+
+        <!-- REGISTER -->
+        <div id="register-section" class="hidden">
+            <h2 class="auth-title">Join Us</h2>
+            <p class="auth-subtitle">Create your coffee companion account</p>
+
+            <div id="register-error" class="error-message"></div>
+            <div id="register-success" class="success-message"></div>
+
+            <form id="register-form">
+                <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <input type="text" id="register-username" class="input-field" placeholder="Choose a username" required />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input
+    type="email"
+    id="register-email"
+    class="input-field"
+    placeholder="you@example.com"
+    required
+/>
+
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" id="register-password" class="input-field" placeholder="Create a strong password" required />
+                </div>
+                <button type="submit" class="submit-btn">Create Account</button>
+            </form>
+
+            <div class="auth-switch">
+                Already have an account? <a href="#" id="switch-to-login">Sign in</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const loginSection = document.getElementById('login-section');
+    const registerSection = document.getElementById('register-section');
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
+    const switchToRegister = document.getElementById('switch-to-register');
+    const switchToLogin = document.getElementById('switch-to-login');
+    const loginError = document.getElementById('login-error');
+    const loginSuccess = document.getElementById('login-success');
+    const registerError = document.getElementById('register-error');
+    const registerSuccess = document.getElementById('register-success');
+
+    function showMsg(el, msg) {
+        el.textContent = msg;
+        el.classList.add('show');
+        setTimeout(() => el.classList.remove('show'), 5000);
+    }
+    function clearMsgs() {
+        [loginError, loginSuccess, registerError, registerSuccess].forEach(el => {
+            el.classList.remove('show');
+            el.textContent = '';
+        });
+    }
+
+    switchToRegister.addEventListener('click', (e) => {
+        e.preventDefault();
+        clearMsgs();
+        loginSection.classList.add('hidden');
+        registerSection.classList.remove('hidden');
+    });
+
+    switchToLogin.addEventListener('click', (e) => {
+        e.preventDefault();
+        clearMsgs();
+        registerSection.classList.add('hidden');
+        loginSection.classList.remove('hidden');
+    });
+
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        clearMsgs();
+        const email = document.getElementById('login-email').value.trim();
+        const password = document.getElementById('login-password').value;
+        if (!email.includes('@')) {
+            showMsg(loginError, 'Please enter a valid email address');
+            return;
+        }
+        try {
+            const res = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({ email, password })
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.message || 'Login failed');
+            showMsg(loginSuccess, 'Sign in successful! Redirecting...');
+            setTimeout(() => window.location.href = '/chat', 1000);
+        } catch (err) {
+            showMsg(loginError, err.message);
+        }
+    });
+
+    registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        clearMsgs();
+        const username = document.getElementById('register-username').value.trim();
+        const email = document.getElementById('register-email').value.trim();
+        const password = document.getElementById('register-password').value;
+        if (username.length < 3) {
+            showMsg(registerError, 'Username must be at least 3 characters');
+            return;
+        }
+        if (!email.includes('@')) {
+            showMsg(registerError, 'Please enter a valid email address');
+            return;
+        }
+        if (password.length < 6) {
+            showMsg(registerError, 'Password must be at least 6 characters');
+            return;
+        }
+        try {
+            const res = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({ username, email, password })
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.message || 'Registration failed');
+            showMsg(registerSuccess, 'Account created! You can sign in now.');
+            setTimeout(() => {
+                switchToLogin.click();
+            }, 1000);
+        } catch (err) {
+            showMsg(registerError, err.message);
+        }
+    });
+</script>
+</body>
+</html>
