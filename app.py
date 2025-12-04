@@ -13,16 +13,16 @@ import requests
 from models import db, User, Conversation, Message
 
 EMAIL_REGEX = re.compile(r".+@.+\..+")
-# ------------------- إعداد .env -------------------
+
 
 load_dotenv()
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
-DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY")  # حط المفتاح في .env
+DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY") 
 
 
 
 
-# ------------------- إعداد Flask -------------------
+
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = SECRET_KEY
@@ -42,9 +42,7 @@ def unauthorized():
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# ===================================================
-#                 صفحات HTML
-# ===================================================
+
 
 @app.route("/")
 def root():
@@ -63,7 +61,7 @@ def chat_page():
 
 
 
-# ---------- Chat title helper ----------
+
 
 def generate_chat_title(question: str) -> str:
     """
@@ -77,7 +75,7 @@ def generate_chat_title(question: str) -> str:
 
     text = question.strip()
 
-    # 1) شيل التحيات الشائعة في البداية (عربي + إنجليزي)
+ 
     greetings = [
         "hi", "hello", "hey", "yo",
         "مرحبا", "مرحبا!", "مرحبا،",
@@ -89,15 +87,15 @@ def generate_chat_title(question: str) -> str:
     for g in greetings:
         g_lower = g.lower()
         if lower.startswith(g_lower):
-            # قص التحية من البداية
+           
             lower = lower[len(g_lower):].lstrip(" ،,!.؟")
             break
 
-    # لو بعد إزالة التحية صار فاضي، نرجع النص الأصلي
+ 
     if not lower:
         lower = text
 
-    # 2) خذ أول جملة بس (إلى أول ؟ أو . أو ! أو ،)
+  
     cut_chars = [".", "?", "!", "؟", "،", "؛"]
     first_sentence = lower
     for ch in cut_chars:
@@ -110,18 +108,16 @@ def generate_chat_title(question: str) -> str:
     if not first_sentence:
         first_sentence = lower.strip()
 
-    # 3) حد أقصى للطول (مثلاً 40 حرف)
+   
     max_len = 40
     if len(first_sentence) > max_len:
         first_sentence = first_sentence[:max_len].rstrip() + "..."
 
-    # 4) لو كل شيء فشل
+   
     return first_sentence or "New Chat"
 
 
-# ===================================================
-#               /ask – DeepSeek API
-# ===================================================
+
 
 @app.route("/ask", methods=["POST"])
 @login_required
@@ -143,20 +139,20 @@ def ask():
     if not DEEPSEEK_API_KEY:
         return jsonify({"error": "DEEPSEEK_API_KEY is missing in .env"}), 500
 
-    # تأكيد أن المحادثة للمستخدم الحالي
+
     conversation = Conversation.query.filter_by(
         id=chat_id, user_id=current_user.id
     ).first()
     if not conversation:
         return jsonify({"error": "Conversation not found"}), 404
 
-    # أول رسالة → نولد عنوان أوضح
+    
     is_first_message = len(conversation.messages) == 0
     if is_first_message:
         conversation.title = generate_chat_title(question)
 
 
-    # نحفظ رسالة المستخدم
+    
     user_msg = Message(
         sender="user",
         text=question,
@@ -165,15 +161,15 @@ def ask():
     db.session.add(user_msg)
     db.session.commit()
 
-    # نجيب الهيستوري كامل لهذه المحادثة من الداتابيز
+    
     history = Message.query.filter_by(
         conversation_id=chat_id
     ).order_by(Message.timestamp.asc()).all()
 
-    # نحوله للفورمات اللي تحبه DeepSeek
+
     ds_messages = []
 
-    # System prompt يخلي الموديل متخصّص بالقهوة (تقدر تعدله)
+   
     ds_messages.append({
     "role": "system",
     "content": (
@@ -198,7 +194,7 @@ def ask():
             "content": m.text
         })
 
-    # نرسل الطلب لـ DeepSeek
+   
     try:
         url = "https://api.deepseek.com/v1/chat/completions"
         headers = {
@@ -206,7 +202,7 @@ def ask():
             "Content-Type": "application/json"
         }
         payload = {
-            "model": "deepseek-chat",   # لو غيرت الموديل من لوحة ديبسيك عدل الاسم هنا
+            "model": "deepseek-chat",  
             "messages": ds_messages,
             "temperature": 0.7,
         }
@@ -214,7 +210,7 @@ def ask():
         resp = requests.post(url, json=payload, headers=headers, timeout=60)
         data = resp.json()
 
-        # لو فيه خطأ من DeepSeek نفسه (مثلاً Insufficient Balance)
+       
         if resp.status_code != 200:
             msg = data.get("error", {}).get("message", "Unknown DeepSeek error")
             print("DeepSeek error:", resp.status_code, data)
@@ -226,7 +222,6 @@ def ask():
         print("DeepSeek exception:", e)
         return jsonify({"error": f"Failed to call DeepSeek: {e}"}), 500
 
-    # نحفظ رد الـ AI في الداتابيز
     ai_msg = Message(
         sender="assistant",
         text=ai_answer.strip(),
@@ -241,9 +236,7 @@ def ask():
         "title": conversation.title if is_first_message else None
     })
 
-# ===================================================
-#                 AUTH API
-# ===================================================
+
 
 @app.route("/api/auth/register", methods=["POST"])
 def register():
@@ -253,26 +246,26 @@ def register():
     email = (data.get("email") or "").strip()
     password = (data.get("password") or "").strip()
 
-    # فقط للتأكد في اللوق
+    
     print("REGISTER TRY:", repr(username), repr(email))
 
-    # 1) الحقول الأساسية
+   
     if not username or not email or not password:
         return jsonify({"message": "All fields are required"}), 400
 
-    # 2) طول اليوزرنيم منطقي
+
     if len(username) < 3 or len(username) > 30:
         return jsonify({"message": "Username must be between 3 and 30 characters."}), 400
 
-    # 3) شكل الإيميل (بسيط جداً)
+
     if not EMAIL_REGEX.match(email):
         return jsonify({"message": "Please enter a valid email address."}), 400
 
-    # 4) طول الباسورد
+  
     if len(password) < 6:
         return jsonify({"message": "Password must be at least 6 characters long."}), 400
 
-    # 5) تأكد ما فيه مستخدم بنفس الإيميل أو اليوزرنيم
+  
     existing_user = User.query.filter(
         (User.email == email) | (User.username == username)
     ).first()
@@ -280,7 +273,7 @@ def register():
     if existing_user:
         return jsonify({"message": "User with this email or username already exists."}), 409
 
-    # 6) إنشاء المستخدم
+  
     hashed = bcrypt.generate_password_hash(password).decode("utf-8")
     user = User(username=username, email=email, password_hash=hashed)
     db.session.add(user)
@@ -323,9 +316,7 @@ def get_me():
         "email": current_user.email
     }), 200
 
-# ===================================================
-#            Chat list + messages API
-# ===================================================
+
 
 @app.route("/api/chats", methods=["GET"])
 @login_required
@@ -394,9 +385,7 @@ def rename_chat(chat_id):
     db.session.commit()
     return jsonify({"message": "Chat renamed successfully"}), 200
 
-# ===================================================
-#                  تشغيل التطبيق
-# ===================================================
+
 
 if __name__ == "__main__":
     with app.app_context():
