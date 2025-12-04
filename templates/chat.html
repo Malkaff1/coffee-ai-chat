@@ -30,7 +30,7 @@
             overflow: hidden;
         }
 
-        /* Premium Atmospheric Glow */
+       
         body::before {
             content: "";
             position: fixed;
@@ -51,7 +51,7 @@
             width: 100%;
         }
 
-        /* ===== SIDEBAR ===== */
+     
         .sidebar {
             width: 280px;
             background: linear-gradient(to bottom, rgba(26, 23, 20, 0.6), rgba(26, 23, 20, 0.5));
@@ -335,7 +335,7 @@
             backdrop-filter: blur(5px);
         }
 
-        /* ===== INPUT BAR ===== */
+       
         .input-section {
             padding: 24px 32px;
             background: linear-gradient(to top, rgba(15, 12, 10, 0.8), transparent);
@@ -410,7 +410,7 @@
             margin-top: 8px;
         }
 
-        /* فقّاعة "الذكاء يفكر الآن" */
+       
 .message.typing-message .message-bubble {
     display: inline-flex;
     align-items: center;
@@ -422,7 +422,7 @@
     padding: 12px 16px;
 }
 
-/* النقاط المتحركة */
+
 .typing-dots {
     display: inline-flex;
     gap: 4px;
@@ -482,7 +482,7 @@
             </div>
         </div>
 
-        <!-- MAIN CHAT AREA -->
+      
         <div class="chat-area">
             <div class="messages-container" id="messagesContainer">
                 <div class="onboarding" id="onboarding">
@@ -491,7 +491,7 @@
                 </div>
             </div>
 
-            <!-- INPUT BAR -->
+            
             <div class="input-section">
                 <div class="input-wrapper">
                     <input
@@ -540,7 +540,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 targetEl.innerHTML += ch;
             }
 
-            // دايمًا ننزل السكروول تحت
+            
             dom.messagesContainer.scrollTop = dom.messagesContainer.scrollHeight;
 
             setTimeout(step, speed);
@@ -548,7 +548,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         step();
     }
-// عنصر "جالس يفكر"
+
 
     async function api(endpoint, method = 'GET', body = null) {
         const res = await fetch(endpoint, {
@@ -645,7 +645,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showTyping() {
-        if (typingEl) return; // لو موجود لا تكرره
+        if (typingEl) return; 
 
         typingEl = document.createElement('div');
         typingEl.className = 'message assistant typing-message';
@@ -711,7 +711,6 @@ document.addEventListener('DOMContentLoaded', () => {
             await newChat();
         }
 
-        // أضف رسالة المستخدم مباشرة
         const safeUser = text.replace(/</g, '&lt;');
         const container = dom.messagesContainer;
         container.innerHTML += `
@@ -724,7 +723,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dom.messageInput.disabled = true;
         dom.sendBtn.disabled = true;
 
-        // أظهر "الذكاء يفكر..."
+        
         showTyping();
 
         try {
@@ -733,11 +732,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 question: text,
             });
 
-            // أخفِ علامة التفكير
-// أخفِ علامة التفكير
+
+
 hideTyping();
 
-    // أضف فقاعة فاضية ونخليها تكتب بالتدريج
+   
     const ai = res.ai_message;
     const rawText = ai.text || '';
 
@@ -757,11 +756,10 @@ hideTyping();
     container.appendChild(msgWrapper);
     container.scrollTop = container.scrollHeight;
 
-// هنا يبدأ التأثير الكتابي
-typeWriter(bubble, safeText, 18); // غيّر 18 لو تبغى أسرع/أبطأ
+
+typeWriter(bubble, safeText, 18); 
 
 
-            // إذا أول رسالة في الشات → حدّث العنوان
             if (res.title) {
                 const chat = state.chats.find(c => c.id === state.activeChatId);
                 if (chat) {
