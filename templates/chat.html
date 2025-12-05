@@ -449,6 +449,46 @@
     30% { opacity: 1; transform: translateY(-2px); }
     100% { opacity: 0.2; transform: translateY(0); }
 }
+@media (max-width: 768px) {
+    #app {
+        flex-direction: column;
+        height: 100vh;
+    }
+
+    
+    .sidebar {
+        width: 100%;
+        flex: 0 0 auto;
+        padding: 12px 16px;
+        max-height: 40vh;        
+        overflow-y: auto;
+    }
+
+    
+    .chat-area {
+        flex: 1;
+    }
+
+  
+    .messages-container {
+        padding: 16px 12px 8px;
+    }
+
+    .input-section {
+        padding: 10px 12px 14px;
+    }
+
+    
+    .message-bubble {
+        max-width: 100%;
+    }
+
+
+    .chat-item-title {
+        max-width: 150px;
+    }
+}
+
 
     </style>
 </head>
