@@ -21,7 +21,6 @@
             --text-cream: #E8E3DD;
             --text-muted: #A89D94;
         }
-        
 
         body {
             background: var(--bg-espresso);
@@ -30,7 +29,6 @@
             overflow: hidden;
         }
 
-       
         body::before {
             content: "";
             position: fixed;
@@ -51,7 +49,6 @@
             width: 100%;
         }
 
-     
         .sidebar {
             width: 280px;
             background: linear-gradient(to bottom, rgba(26, 23, 20, 0.6), rgba(26, 23, 20, 0.5));
@@ -231,7 +228,6 @@
             border-color: rgba(255, 80, 80, 0.5);
         }
 
-       
         .chat-area {
             flex: 1;
             display: flex;
@@ -275,9 +271,9 @@
             display: none;
         }
 
-.onboarding-icon {
-    display: none;
-}
+        .onboarding-icon {
+            display: none;
+        }
 
         .onboarding h2 {
             font-size: 28px;
@@ -335,7 +331,6 @@
             backdrop-filter: blur(5px);
         }
 
-       
         .input-section {
             padding: 24px 32px;
             background: linear-gradient(to top, rgba(15, 12, 10, 0.8), transparent);
@@ -410,94 +405,158 @@
             margin-top: 8px;
         }
 
-       
-.message.typing-message .message-bubble {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(42, 36, 31, 0.8);
-    color: var(--text-cream);
-    border: 1px solid rgba(199, 161, 122, 0.15);
-    border-radius: 18px 18px 4px 18px;
-    padding: 12px 16px;
-}
+        .message.typing-message .message-bubble {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(42, 36, 31, 0.8);
+            color: var(--text-cream);
+            border: 1px solid rgba(199, 161, 122, 0.15);
+            border-radius: 18px 18px 4px 18px;
+            padding: 12px 16px;
+        }
 
+        .typing-dots {
+            display: inline-flex;
+            gap: 4px;
+        }
 
-.typing-dots {
-    display: inline-flex;
-    gap: 4px;
-}
+        .typing-dots span {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: #C7A17A;
+            opacity: 0.3;
+            animation: typingBlink 1s infinite;
+        }
 
-.typing-dots span {
-    width: 6px;
-    height: 6px;
-    border-radius: 999px;
-    background: #C7A17A;
-    opacity: 0.3;
-    animation: typingBlink 1s infinite;
-}
+        .typing-dots span:nth-child(2) {
+            animation-delay: 0.15s;
+        }
 
-.typing-dots span:nth-child(2) {
-    animation-delay: 0.15s;
-}
-.typing-dots span:nth-child(3) {
-    animation-delay: 0.3s;
-}
+        .typing-dots span:nth-child(3) {
+            animation-delay: 0.3s;
+        }
 
-@keyframes typingBlink {
-    0% { opacity: 0.2; transform: translateY(0); }
-    30% { opacity: 1; transform: translateY(-2px); }
-    100% { opacity: 0.2; transform: translateY(0); }
-}
-@media (max-width: 768px) {
-    #app {
-        flex-direction: column;
-        height: 100vh;
-    }
+        @keyframes typingBlink {
+            0% { opacity: 0.2; transform: translateY(0); }
+            30% { opacity: 1; transform: translateY(-2px); }
+            100% { opacity: 0.2; transform: translateY(0); }
+        }
 
-    
-    .sidebar {
-        width: 100%;
-        flex: 0 0 auto;
-        padding: 12px 16px;
-        max-height: 40vh;        
-        overflow-y: auto;
-    }
+        /* ====== Mobile Header & Sidebar Overlay (added) ====== */
+        .mobile-header {
+            display: none;
+        }
 
-    
-    .chat-area {
-        flex: 1;
-    }
+        .sidebar-overlay {
+            display: none;
+        }
 
-  
-    .messages-container {
-        padding: 16px 12px 8px;
-    }
+        @media (max-width: 768px) {
+            body {
+                overflow: hidden;
+            }
 
-    .input-section {
-        padding: 10px 12px 14px;
-    }
+            #app {
+                position: relative;
+                height: 100vh;
+                flex-direction: column;
+            }
 
-    
-    .message-bubble {
-        max-width: 100%;
-    }
+            .mobile-header {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 12px 16px;
+                background: rgba(15, 12, 10, 0.95);
+                border-bottom: 1px solid rgba(199, 161, 122, 0.15);
+                z-index: 5;
+            }
 
+            .mobile-header-title {
+                font-weight: 600;
+                font-size: 16px;
+            }
 
-    .chat-item-title {
-        max-width: 150px;
-    }
-}
+            .menu-toggle {
+                background: none;
+                border: 1px solid rgba(199, 161, 122, 0.5);
+                border-radius: 999px;
+                width: 32px;
+                height: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--accent-coffee);
+                font-size: 18px;
+                cursor: pointer;
+            }
 
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                height: 100vh;
+                width: 75%;
+                max-width: 280px;
+                z-index: 20;
+                transition: left 0.25s ease;
+                box-shadow: 4px 0 20px rgba(0, 0, 0, 0.6);
+            }
 
+            .sidebar.open {
+                left: 0;
+            }
+
+            .sidebar-overlay {
+                display: block;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.45);
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.25s ease;
+                z-index: 10;
+            }
+
+            .sidebar-overlay.visible {
+                opacity: 1;
+                pointer-events: auto;
+            }
+
+            .chat-area {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .messages-container {
+                padding: 12px 12px 4px;
+            }
+
+            .input-section {
+                padding: 10px 12px 14px;
+            }
+
+            .message-bubble {
+                max-width: 100%;
+            }
+
+            .chat-item-title {
+                max-width: 150px;
+            }
+        }
     </style>
 </head>
 <body>
     <div id="app">
         <!-- SIDEBAR -->
-        <div class="sidebar">
+        <div class="sidebar" id="sidebar">
             <div class="logo">
-                <div class="logo-icon"><img src="{{ url_for('static', filename='logo.png') }}" alt="Coffee AI Logo" class="w-full h-full p-1"></div>
+                <div class="logo-icon">
+                    <img src="{{ url_for('static', filename='logo.png') }}" alt="Coffee AI Logo" class="w-full h-full p-1">
+                </div>
                 <div class="logo-text">Coffee AI</div>
             </div>
 
@@ -514,16 +573,28 @@
             <div class="sidebar-footer">
                 <div class="user-info">
                     <img src="{{ url_for('static', filename='contacts_2122152.png') }}"
-     alt="User" style="width:22px; height:22px; border-radius:6px;">
-
+                        alt="User" style="width:22px; height:22px; border-radius:6px;">
                     <span id="username">Guest</span>
                 </div>
                 <button class="logout-btn" onclick="logout()">Logout</button>
             </div>
         </div>
 
-      
+        <!-- Overlay لموبايل -->
+        <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+        <!-- CHAT AREA -->
         <div class="chat-area">
+            <!-- Mobile Header -->
+            <div class="mobile-header">
+                <button class="menu-toggle" onclick="toggleSidebar()">
+                    ☰
+                </button>
+                <div class="mobile-header-title">
+                    Coffee AI
+                </div>
+            </div>
+
             <div class="messages-container" id="messagesContainer">
                 <div class="onboarding" id="onboarding">
                     <h2>Welcome to AI Coffee Assistant</h2>
@@ -531,7 +602,6 @@
                 </div>
             </div>
 
-            
             <div class="input-section">
                 <div class="input-wrapper">
                     <input
@@ -548,333 +618,348 @@
         </div>
     </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const state = {
-        chats: [],
-        activeChatId: null,
-        username: 'Guest',
-    };
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const state = {
+            chats: [],
+            activeChatId: null,
+            username: 'Guest',
+        };
 
-    const dom = {
-        username: document.getElementById('username'),
-        chatList: document.getElementById('chatList'),
-        messagesContainer: document.getElementById('messagesContainer'),
-        messageInput: document.getElementById('messageInput'),
-        sendBtn: document.getElementById('sendBtn'),
-    };
+        const dom = {
+            username: document.getElementById('username'),
+            chatList: document.getElementById('chatList'),
+            messagesContainer: document.getElementById('messagesContainer'),
+            messageInput: document.getElementById('messageInput'),
+            sendBtn: document.getElementById('sendBtn'),
+        };
 
-    let typingEl = null; 
-    
-        function typeWriter(targetEl, text, speed = 18) {
-        let i = 0;
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
 
-        function step() {
-            if (i >= text.length) return;
+        function toggleSidebar(force) {
+            if (!sidebar || !sidebarOverlay) return;
 
-            const ch = text[i++];
+            const willOpen = typeof force === 'boolean'
+                ? force
+                : !sidebar.classList.contains('open');
 
-            if (ch === '\n') {
-                targetEl.innerHTML += '<br>';
+            if (willOpen) {
+                sidebar.classList.add('open');
+                sidebarOverlay.classList.add('visible');
             } else {
-                targetEl.innerHTML += ch;
+                sidebar.classList.remove('open');
+                sidebarOverlay.classList.remove('visible');
+            }
+        }
+
+        window.toggleSidebar = toggleSidebar;
+
+        let typingEl = null;
+
+        function typeWriter(targetEl, text, speed = 18) {
+            let i = 0;
+
+            function step() {
+                if (i >= text.length) return;
+
+                const ch = text[i++];
+
+                if (ch === '\n') {
+                    targetEl.innerHTML += '<br>';
+                } else {
+                    targetEl.innerHTML += ch;
+                }
+
+                dom.messagesContainer.scrollTop = dom.messagesContainer.scrollHeight;
+
+                setTimeout(step, speed);
             }
 
-            
-            dom.messagesContainer.scrollTop = dom.messagesContainer.scrollHeight;
-
-            setTimeout(step, speed);
+            step();
         }
 
-        step();
-    }
-
-
-    async function api(endpoint, method = 'GET', body = null) {
-        const res = await fetch(endpoint, {
-            method,
-            headers: { 'Content-Type': 'application/json' },
-            body: body ? JSON.stringify(body) : null,
-        });
-        if (res.status === 401) {
-            window.location.href = '/login';
-            return;
-        }
-        const data = await res.json();
-        if (!res.ok) {
-            const msg = data.message || data.error || 'API error';
-            throw new Error(msg);
-        }
-        return data;
-    }
-
-    function renderChats() {
-        const list = dom.chatList;
-        list.innerHTML = '';
-
-        if (state.chats.length === 0) {
-            list.innerHTML = `
-                <div style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 20px;">
-                    Start a new chat
-                </div>`;
-            return;
+        async function api(endpoint, method = 'GET', body = null) {
+            const res = await fetch(endpoint, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: body ? JSON.stringify(body) : null,
+            });
+            if (res.status === 401) {
+                window.location.href = '/login';
+                return;
+            }
+            const data = await res.json();
+            if (!res.ok) {
+                const msg = data.message || data.error || 'API error';
+                throw new Error(msg);
+            }
+            return data;
         }
 
-        state.chats.forEach(chat => {
-            const activeClass = chat.id === state.activeChatId ? 'active' : '';
-            const item = document.createElement('div');
-            item.className = `chat-item ${activeClass}`;
-            item.onclick = () => selectChat(chat.id);
+        function renderChats() {
+            const list = dom.chatList;
+            list.innerHTML = '';
 
-            item.innerHTML = `
-                <div class="chat-item-title">${chat.title}</div>
-                <div class="chat-item-menu">
-                    <button class="menu-btn" title="Rename">
-                        <img src="{{ url_for('static', filename='pe.png') }}"
-                            style="width:16px; height:16px; object-fit:contain;">
-                    </button>
-                    <button class="menu-btn" title="Delete">
-                        <img src="{{ url_for('static', filename='tra.png') }}" 
-                            alt="Delete" style="width:16px;height:16px;">
-                    </button>
+            if (state.chats.length === 0) {
+                list.innerHTML = `
+                    <div style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 20px;">
+                        Start a new chat
+                    </div>`;
+                return;
+            }
+
+            state.chats.forEach(chat => {
+                const activeClass = chat.id === state.activeChatId ? 'active' : '';
+                const item = document.createElement('div');
+                item.className = `chat-item ${activeClass}`;
+                item.onclick = () => selectChat(chat.id);
+
+                item.innerHTML = `
+                    <div class="chat-item-title">${chat.title}</div>
+                    <div class="chat-item-menu">
+                        <button class="menu-btn" title="Rename">
+                            <img src="{{ url_for('static', filename='pe.png') }}"
+                                style="width:16px; height:16px; object-fit:contain;">
+                        </button>
+                        <button class="menu-btn" title="Delete">
+                            <img src="{{ url_for('static', filename='tra.png') }}" 
+                                alt="Delete" style="width:16px;height:16px;">
+                        </button>
+                    </div>
+                `;
+
+                const [renameBtn, deleteBtn] = item.querySelectorAll('.menu-btn');
+                renameBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    renameChat(chat.id);
+                });
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    deleteChat(chat.id);
+                });
+
+                list.appendChild(item);
+            });
+        }
+
+        function renderMessages(messages) {
+            const container = dom.messagesContainer;
+
+            if (!messages || messages.length === 0) {
+                container.innerHTML = `
+                    <div class="onboarding" id="onboarding">
+                        <div class="onboarding-icon">☕</div>
+                        <h2>Welcome to AI Coffee Assistant</h2>
+                        <p>Ask me anything about coffee brewing, grind sizes, brewing methods, or how to perfect your brew.</p>
+                    </div>`;
+                return;
+            }
+
+            let html = '';
+            messages.forEach(msg => {
+                const safe = msg.text
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;');
+
+                html += `
+                    <div class="message ${msg.sender}">
+                        <div class="message-bubble">${safe}</div>
+                    </div>`;
+            });
+            container.innerHTML = html;
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function showTyping() {
+            if (typingEl) return;
+
+            typingEl = document.createElement('div');
+            typingEl.className = 'message assistant typing-message';
+            typingEl.innerHTML = `
+                <div class="message-bubble">
+                    <div class="typing-dots">
+                        <span></span><span></span><span></span>
+                    </div>
                 </div>
             `;
-
-            const [renameBtn, deleteBtn] = item.querySelectorAll('.menu-btn');
-            renameBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                renameChat(chat.id);
-            });
-            deleteBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                deleteChat(chat.id);
-            });
-
-            list.appendChild(item);
-        });
-    }
-
-    function renderMessages(messages) {
-        const container = dom.messagesContainer;
-
-        if (!messages || messages.length === 0) {
-            container.innerHTML = `
-                <div class="onboarding" id="onboarding">
-                    <div class="onboarding-icon">☕</div>
-                    <h2>Welcome to AI Coffee Assistant</h2>
-                    <p>Ask me anything about coffee brewing, grind sizes, brewing methods, or how to perfect your brew.</p>
-                </div>`;
-            return;
+            dom.messagesContainer.appendChild(typingEl);
+            dom.messagesContainer.scrollTop = dom.messagesContainer.scrollHeight;
         }
 
-        let html = '';
-        messages.forEach(msg => {
-            const safe = msg.text
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;');
-
-            html += `
-                <div class="message ${msg.sender}">
-                    <div class="message-bubble">${safe}</div>
-                </div>`;
-        });
-        container.innerHTML = html;
-        container.scrollTop = container.scrollHeight;
-    }
-
-    function showTyping() {
-        if (typingEl) return; 
-
-        typingEl = document.createElement('div');
-        typingEl.className = 'message assistant typing-message';
-        typingEl.innerHTML = `
-            <div class="message-bubble">
-                <div class="typing-dots">
-                    <span></span><span></span><span></span>
-                </div>
-            </div>
-        `;
-        dom.messagesContainer.appendChild(typingEl);
-        dom.messagesContainer.scrollTop = dom.messagesContainer.scrollHeight;
-    }
-
-    function hideTyping() {
-        if (!typingEl) return;
-        typingEl.remove();
-        typingEl = null;
-    }
-
-    async function loadUser() {
-        const me = await api('/api/auth/me');
-        state.username = me.username;
-        dom.username.textContent = me.username;
-    }
-
-    async function loadChats() {
-        state.chats = await api('/api/chats');
-        if (state.chats.length > 0) {
-            if (!state.activeChatId) {
-                state.activeChatId = state.chats[0].id;
-            }
-            const msgs = await api(`/api/chats/${state.activeChatId}/messages`);
-            renderMessages(msgs);
-        } else {
-            renderMessages([]);
-        }
-        renderChats();
-    }
-
-    async function selectChat(id) {
-        if (state.activeChatId === id) return;
-        state.activeChatId = id;
-        const msgs = await api(`/api/chats/${id}/messages`);
-        renderMessages(msgs);
-        renderChats();
-    }
-
-    async function newChat() {
-        const chat = await api('/api/chats', 'POST');
-        state.chats.unshift(chat);
-        state.activeChatId = chat.id;
-        renderChats();
-        renderMessages([]);
-    }
-    window.newChat = newChat;
-
-    async function sendMessage() {
-        const text = dom.messageInput.value.trim();
-        if (!text) return;
-
-        if (!state.activeChatId) {
-            await newChat();
+        function hideTyping() {
+            if (!typingEl) return;
+            typingEl.remove();
+            typingEl = null;
         }
 
-        const safeUser = text.replace(/</g, '&lt;');
-        const container = dom.messagesContainer;
-        container.innerHTML += `
-            <div class="message user">
-                <div class="message-bubble">${safeUser}</div>
-            </div>`;
-        container.scrollTop = container.scrollHeight;
+        async function loadUser() {
+            const me = await api('/api/auth/me');
+            state.username = me.username;
+            dom.username.textContent = me.username;
+        }
 
-        dom.messageInput.value = '';
-        dom.messageInput.disabled = true;
-        dom.sendBtn.disabled = true;
-
-        
-        showTyping();
-
-        try {
-            const res = await api('/ask', 'POST', {
-                chatId: state.activeChatId,
-                question: text,
-            });
-
-
-
-hideTyping();
-
-   
-    const ai = res.ai_message;
-    const rawText = ai.text || '';
-
-    const safeText = rawText
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
-
-    const msgWrapper = document.createElement('div');
-    msgWrapper.className = 'message assistant';
-
-    const bubble = document.createElement('div');
-    bubble.className = 'message-bubble';
-
-    msgWrapper.appendChild(bubble);
-    container.appendChild(msgWrapper);
-    container.scrollTop = container.scrollHeight;
-
-
-typeWriter(bubble, safeText, 18); 
-
-
-            if (res.title) {
-                const chat = state.chats.find(c => c.id === state.activeChatId);
-                if (chat) {
-                    chat.title = res.title;
-                    renderChats();
+        async function loadChats() {
+            state.chats = await api('/api/chats');
+            if (state.chats.length > 0) {
+                if (!state.activeChatId) {
+                    state.activeChatId = state.chats[0].id;
                 }
-            }
-        } catch (err) {
-            hideTyping();
-            container.innerHTML += `
-                <div class="message assistant">
-                    <div class="message-bubble">Error: ${err.message}</div>
-                </div>`;
-            container.scrollTop = container.scrollHeight;
-        } finally {
-            dom.messageInput.disabled = false;
-            dom.sendBtn.disabled = false;
-            dom.messageInput.focus();
-        }
-    }
-    window.sendMessage = sendMessage;
-
-    function handleKeypress(e) {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            sendMessage();
-        }
-    }
-    window.handleKeypress = handleKeypress;
-
-    async function renameChat(id) {
-        const chat = state.chats.find(c => c.id === id);
-        if (!chat) return;
-        const title = prompt('Rename chat:', chat.title);
-        if (!title || !title.trim()) return;
-
-        await api(`/api/chats/${id}`, 'PUT', { title: title.trim() });
-        chat.title = title.trim();
-        renderChats();
-    }
-
-    async function deleteChat(id) {
-        if (!confirm('Delete this chat?')) return;
-        await api(`/api/chats/${id}`, 'DELETE');
-        state.chats = state.chats.filter(c => c.id !== id);
-        if (state.activeChatId === id) {
-            state.activeChatId = state.chats[0]?.id || null;
-            if (state.activeChatId) {
                 const msgs = await api(`/api/chats/${state.activeChatId}/messages`);
                 renderMessages(msgs);
             } else {
                 renderMessages([]);
             }
+            renderChats();
         }
-        renderChats();
-    }
 
-    async function logout() {
-        await api('/api/auth/logout', 'POST');
-        window.location.href = '/login';
-    }
-    window.logout = logout;
+        async function selectChat(id) {
+            if (state.activeChatId === id) return;
+            state.activeChatId = id;
+            const msgs = await api(`/api/chats/${id}/messages`);
+            renderMessages(msgs);
+            renderChats();
 
-    (async function init() {
-        try {
-            await loadUser();
-            await loadChats();
-        } catch (err) {
-            console.error(err);
+            if (window.innerWidth <= 768) {
+                toggleSidebar(false);
+            }
+        }
+
+        async function newChat() {
+            const chat = await api('/api/chats', 'POST');
+            state.chats.unshift(chat);
+            state.activeChatId = chat.id;
+            renderChats();
+            renderMessages([]);
+        }
+        window.newChat = newChat;
+
+        async function sendMessage() {
+            const text = dom.messageInput.value.trim();
+            if (!text) return;
+
+            if (!state.activeChatId) {
+                await newChat();
+            }
+
+            const safeUser = text.replace(/</g, '&lt;');
+            const container = dom.messagesContainer;
+            container.innerHTML += `
+                <div class="message user">
+                    <div class="message-bubble">${safeUser}</div>
+                </div>`;
+            container.scrollTop = container.scrollHeight;
+
+            dom.messageInput.value = '';
+            dom.messageInput.disabled = true;
+            dom.sendBtn.disabled = true;
+
+            showTyping();
+
+            try {
+                const res = await api('/ask', 'POST', {
+                    chatId: state.activeChatId,
+                    question: text,
+                });
+
+                hideTyping();
+
+                const ai = res.ai_message;
+                const rawText = ai.text || '';
+
+                const safeText = rawText
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;');
+
+                const msgWrapper = document.createElement('div');
+                msgWrapper.className = 'message assistant';
+
+                const bubble = document.createElement('div');
+                bubble.className = 'message-bubble';
+
+                msgWrapper.appendChild(bubble);
+                container.appendChild(msgWrapper);
+                container.scrollTop = container.scrollHeight;
+
+                typeWriter(bubble, safeText, 18);
+
+                if (res.title) {
+                    const chat = state.chats.find(c => c.id === state.activeChatId);
+                    if (chat) {
+                        chat.title = res.title;
+                        renderChats();
+                    }
+                }
+            } catch (err) {
+                hideTyping();
+                container.innerHTML += `
+                    <div class="message assistant">
+                        <div class="message-bubble">Error: ${err.message}</div>
+                    </div>`;
+                container.scrollTop = container.scrollHeight;
+            } finally {
+                dom.messageInput.disabled = false;
+                dom.sendBtn.disabled = false;
+                dom.messageInput.focus();
+            }
+        }
+        window.sendMessage = sendMessage;
+
+        function handleKeypress(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        }
+        window.handleKeypress = handleKeypress;
+
+        async function renameChat(id) {
+            const chat = state.chats.find(c => c.id === id);
+            if (!chat) return;
+            const title = prompt('Rename chat:', chat.title);
+            if (!title || !title.trim()) return;
+
+            await api(`/api/chats/${id}`, 'PUT', { title: title.trim() });
+            chat.title = title.trim();
+            renderChats();
+        }
+
+        async function deleteChat(id) {
+            if (!confirm('Delete this chat?')) return;
+            await api(`/api/chats/${id}`, 'DELETE');
+            state.chats = state.chats.filter(c => c.id !== id);
+            if (state.activeChatId === id) {
+                state.activeChatId = state.chats[0]?.id || null;
+                if (state.activeChatId) {
+                    const msgs = await api(`/api/chats/${state.activeChatId}/messages`);
+                    renderMessages(msgs);
+                } else {
+                    renderMessages([]);
+                }
+            }
+            renderChats();
+        }
+
+        async function logout() {
+            await api('/api/auth/logout', 'POST');
             window.location.href = '/login';
         }
-    })();
-});
-</script>
+        window.logout = logout;
 
-
+        (async function init() {
+            try {
+                await loadUser();
+                await loadChats();
+            } catch (err) {
+                console.error(err);
+                window.location.href = '/login';
+            }
+        })();
+    });
+    </script>
 </body>
 </html>
