@@ -444,13 +444,194 @@
             100% { opacity: 0.2; transform: translateY(0); }
         }
 
-        /* ====== Mobile Header & Sidebar Overlay (added) ====== */
+        /* زر إخفاء/إظهار السايدبار في الكمبيوتر */
+        .desktop-sidebar-toggle {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            background: rgba(15, 12, 10, 0.95);
+            border: 1px solid rgba(199, 161, 122, 0.5);
+            border-radius: 999px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-coffee);
+            font-size: 18px;
+            cursor: pointer;
+            z-index: 6;
+        }
+
+        /* هيدر الموبايل + overlay */
         .mobile-header {
             display: none;
         }
 
         .sidebar-overlay {
             display: none;
+        }
+
+        /* شريط عنوان المحادثة */
+        .chat-header-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 16px;
+            border-bottom: 1px solid rgba(199, 161, 122, 0.18);
+            background: radial-gradient(circle at top, rgba(199,161,122,0.15), transparent);
+        }
+
+        .chat-title-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: rgba(168,157,148,0.8);
+            margin-right: 8px;
+        }
+
+        .chat-title-clickable {
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: rgba(42,36,31,0.85);
+            border: 1px solid rgba(199,161,122,0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .chat-title-clickable:hover {
+            background: rgba(42,36,31,1);
+            border-color: rgba(199,161,122,0.7);
+        }
+
+        .chat-title-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: #C7A17A;
+        }
+
+        /* Modal عام (يُستخدم للحساب وعمليات الشات) */
+        .account-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 40;
+        }
+
+        .account-modal-overlay.visible {
+            display: flex;
+        }
+
+        .account-modal {
+            background: #1A1714;
+            border-radius: 16px;
+            border: 1px solid rgba(199,161,122,0.4);
+            padding: 18px 18px 14px;
+            max-width: 320px;
+            width: 90%;
+            box-shadow: 0 18px 45px rgba(0,0,0,0.6);
+        }
+
+        .account-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .account-modal-title {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .account-modal-close {
+            background: none;
+            border: none;
+            color: rgba(232,227,221,0.8);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 0 4px;
+        }
+
+        .account-modal-close:hover {
+            color: #ffffff;
+        }
+
+        .account-modal-body {
+            font-size: 13px;
+            color: var(--text-cream);
+            margin-top: 4px;
+        }
+
+        .account-modal-row-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: rgba(168,157,148,0.9);
+            margin-bottom: 2px;
+        }
+
+        .account-modal-row-value {
+            margin-bottom: 10px;
+            word-break: break-all;
+        }
+
+        .account-modal-guest-note {
+            font-size: 12px;
+            color: rgba(232,227,221,0.85);
+            margin-bottom: 10px;
+        }
+
+        .account-modal-guest-btn {
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(199,161,122,0.7);
+            background: transparent;
+            color: var(--accent-coffee);
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .account-modal-guest-btn:hover {
+            background: rgba(199,161,122,0.12);
+        }
+
+        .chat-action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .chat-action-btn {
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(199,161,122,0.7);
+            background: transparent;
+            color: var(--accent-coffee);
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .chat-action-btn.confirm-delete {
+            border-color: rgba(255,80,80,0.8);
+            color: #FF6B6B;
+        }
+
+        .chat-action-btn.confirm-delete:hover {
+            background: rgba(255,80,80,0.15);
+        }
+
+        .chat-action-btn:hover {
+            background: rgba(199,161,122,0.12);
         }
 
         @media (max-width: 768px) {
@@ -462,6 +643,10 @@
                 position: relative;
                 height: 100vh;
                 flex-direction: column;
+            }
+
+            .desktop-sidebar-toggle {
+                display: none;
             }
 
             .mobile-header {
@@ -546,6 +731,26 @@
             .chat-item-title {
                 max-width: 150px;
             }
+
+            .input-wrapper {
+                max-width: 100%;
+            }
+        }
+
+        /* حالة إخفاء السايدبار في الكمبيوتر فقط */
+        @media (min-width: 769px) {
+            body.sidebar-collapsed .sidebar {
+                display: none;
+            }
+
+            body.sidebar-collapsed .messages-container {
+                padding-left: 32px;
+                padding-right: 32px;
+            }
+
+            body.sidebar-collapsed .input-wrapper {
+                max-width: 100%;
+            }
         }
     </style>
 </head>
@@ -571,7 +776,7 @@
             </div>
 
             <div class="sidebar-footer">
-                <div class="user-info">
+                <div class="user-info" onclick="openAccountDetails()" style="cursor: pointer;">
                     <img src="{{ url_for('static', filename='contacts_2122152.png') }}"
                         alt="User" style="width:22px; height:22px; border-radius:6px;">
                     <span id="username">Guest</span>
@@ -580,11 +785,16 @@
             </div>
         </div>
 
-        <!-- Overlay لموبايل -->
+        <!-- Overlay للموبايل -->
         <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
         <!-- CHAT AREA -->
         <div class="chat-area">
+            <!-- زر الكمبيوتر لإخفاء/إظهار السايدبار -->
+            <button class="desktop-sidebar-toggle" onclick="toggleSidebar()">
+                ☰
+            </button>
+
             <!-- Mobile Header -->
             <div class="mobile-header">
                 <button class="menu-toggle" onclick="toggleSidebar()">
@@ -593,6 +803,15 @@
                 <div class="mobile-header-title">
                     Coffee AI
                 </div>
+            </div>
+
+            <!-- شريط عنوان المحادثة -->
+            <div class="chat-header-bar">
+                <span class="chat-title-label">Chat</span>
+                <button class="chat-title-clickable" onclick="openAccountDetails()">
+                    <span class="chat-title-dot"></span>
+                    <span id="chatTitleDisplay">Guest session</span>
+                </button>
             </div>
 
             <div class="messages-container" id="messagesContainer">
@@ -618,12 +837,45 @@
         </div>
     </div>
 
+    <!-- Modal معلومات الحساب -->
+    <div id="accountModalOverlay" class="account-modal-overlay" onclick="closeAccountDetails(event)">
+        <div class="account-modal" onclick="event.stopPropagation()">
+            <div class="account-modal-header">
+                <div class="account-modal-title">Account details</div>
+                <button class="account-modal-close" onclick="closeAccountDetails(event)">✕</button>
+            </div>
+            <div id="accountModalBody" class="account-modal-body">
+                <!-- يعبّيه السكربت -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal إجراءات المحادثة (Rename / Delete) -->
+    <div id="chatActionModalOverlay" class="account-modal-overlay" onclick="closeChatActionModal(event)">
+        <div class="account-modal" onclick="event.stopPropagation()">
+            <div class="account-modal-header">
+                <div class="account-modal-title" id="chatActionTitle">Chat action</div>
+                <button class="account-modal-close" onclick="closeChatActionModal(event)">✕</button>
+            </div>
+            <div id="chatActionBody" class="account-modal-body">
+                <!-- المحتوى يتغير حسب نوع العملية -->
+            </div>
+            <div class="chat-action-buttons">
+                <button class="chat-action-btn" onclick="closeChatActionModal(event)">Cancel</button>
+                <button class="chat-action-btn" id="chatActionConfirmBtn" onclick="confirmChatAction()">Confirm</button>
+            </div>
+        </div>
+    </div>
+
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         const state = {
             chats: [],
             activeChatId: null,
             username: 'Guest',
+            isGuest: false,
+            email: null,
+            createdAt: null,
         };
 
         const dom = {
@@ -632,30 +884,56 @@
             messagesContainer: document.getElementById('messagesContainer'),
             messageInput: document.getElementById('messageInput'),
             sendBtn: document.getElementById('sendBtn'),
+            logoutBtn: document.querySelector('.logout-btn'),
+            chatTitleDisplay: document.getElementById('chatTitleDisplay'),
+            accountModalOverlay: document.getElementById('accountModalOverlay'),
+            accountModalBody: document.getElementById('accountModalBody'),
+            chatActionModalOverlay: document.getElementById('chatActionModalOverlay'),
+            chatActionTitle: document.getElementById('chatActionTitle'),
+            chatActionBody: document.getElementById('chatActionBody'),
+            chatActionConfirmBtn: document.getElementById('chatActionConfirmBtn'),
         };
 
         const sidebar = document.getElementById('sidebar');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
 
+        let typingEl = null;
+        let chatActionMode = null;   // 'rename' or 'delete'
+        let chatActionChatId = null;
+
         function toggleSidebar(force) {
-            if (!sidebar || !sidebarOverlay) return;
+            if (!sidebar) return;
 
-            const willOpen = typeof force === 'boolean'
-                ? force
-                : !sidebar.classList.contains('open');
+            const isMobile = window.innerWidth <= 768;
 
-            if (willOpen) {
-                sidebar.classList.add('open');
-                sidebarOverlay.classList.add('visible');
+            if (isMobile) {
+                if (!sidebarOverlay) return;
+
+                const willOpen = typeof force === 'boolean'
+                    ? force
+                    : !sidebar.classList.contains('open');
+
+                if (willOpen) {
+                    sidebar.classList.add('open');
+                    sidebarOverlay.classList.add('visible');
+                } else {
+                    sidebar.classList.remove('open');
+                    sidebarOverlay.classList.remove('visible');
+                }
             } else {
-                sidebar.classList.remove('open');
-                sidebarOverlay.classList.remove('visible');
+                const willCollapse = typeof force === 'boolean'
+                    ? force
+                    : !document.body.classList.contains('sidebar-collapsed');
+
+                if (willCollapse) {
+                    document.body.classList.add('sidebar-collapsed');
+                } else {
+                    document.body.classList.remove('sidebar-collapsed');
+                }
             }
         }
 
         window.toggleSidebar = toggleSidebar;
-
-        let typingEl = null;
 
         function typeWriter(targetEl, text, speed = 18) {
             let i = 0;
@@ -679,6 +957,29 @@
             step();
         }
 
+        // API عام لا يحوّل لـ /login (لـ /api/whoami و /ask للضيف)
+        async function apiPublic(endpoint, method = 'GET', body = null) {
+            const res = await fetch(endpoint, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: body ? JSON.stringify(body) : null,
+            });
+
+            let data = {};
+            try {
+                data = await res.json();
+            } catch (e) {
+                data = {};
+            }
+
+            if (!res.ok) {
+                const msg = data.message || data.error || 'API error';
+                throw new Error(msg);
+            }
+            return data;
+        }
+
+        // API محمي: لو 401 يحوّل لـ /login
         async function api(endpoint, method = 'GET', body = null) {
             const res = await fetch(endpoint, {
                 method,
@@ -700,6 +1001,33 @@
         function renderChats() {
             const list = dom.chatList;
             list.innerHTML = '';
+
+            // لو المستخدم ضيف: ما فيه قائمة محادثات حقيقية
+            if (state.isGuest) {
+                list.innerHTML = `
+                    <div style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 20px;">
+                        You are in guest mode.<br>
+                        <span style="font-size:12px; opacity:0.8;">
+                            Sign up or log in to save your chats.
+                        </span>
+                        <div style="margin-top:12px;">
+                            <button
+                                style="
+                                    padding:6px 10px;
+                                    border-radius:999px;
+                                    border:1px solid rgba(199,161,122,0.6);
+                                    background:transparent;
+                                    color:var(--accent-coffee);
+                                    font-size:12px;
+                                    cursor:pointer;
+                                "
+                                onclick="window.location.href='/login'">
+                                Sign up / Login
+                            </button>
+                        </div>
+                    </div>`;
+                return;
+            }
 
             if (state.chats.length === 0) {
                 list.innerHTML = `
@@ -753,23 +1081,22 @@
                         <h2>Welcome to AI Coffee Assistant</h2>
                         <p>Ask me anything about coffee brewing, grind sizes, brewing methods, or how to perfect your brew.</p>
                     </div>`;
-                return;
+            } else {
+                let html = '';
+                messages.forEach(msg => {
+                    const safe = msg.text
+                        .replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;')
+                        .replace(/"/g, '&quot;');
+
+                    html += `
+                        <div class="message ${msg.sender}">
+                            <div class="message-bubble">${safe}</div>
+                        </div>`;
+                });
+                container.innerHTML = html;
             }
-
-            let html = '';
-            messages.forEach(msg => {
-                const safe = msg.text
-                    .replace(/&/g, '&amp;')
-                    .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;')
-                    .replace(/"/g, '&quot;');
-
-                html += `
-                    <div class="message ${msg.sender}">
-                        <div class="message-bubble">${safe}</div>
-                    </div>`;
-            });
-            container.innerHTML = html;
             container.scrollTop = container.scrollHeight;
         }
 
@@ -795,13 +1122,102 @@
             typingEl = null;
         }
 
+        function formatDateString(iso) {
+            if (!iso) return 'Unknown';
+            try {
+                const d = new Date(iso);
+                if (isNaN(d.getTime())) return iso;
+                const year = d.getFullYear();
+                const month = String(d.getMonth() + 1).padStart(2, '0');
+                const day = String(d.getDate()).padStart(2, '0');
+                const hours = String(d.getHours()).padStart(2, '0');
+                const mins = String(d.getMinutes()).padStart(2, '0');
+                return `${year}-${month}-${day} ${hours}:${mins}`;
+            } catch (e) {
+                return iso;
+            }
+        }
+
+        function updateAccountDetailsUI() {
+            if (!dom.accountModalBody) return;
+
+            if (state.isGuest) {
+                dom.accountModalBody.innerHTML = `
+                    <p class="account-modal-guest-note">
+                        You are in <strong>guest mode</strong>. Your chats are not saved,
+                        and there is no registered account linked to this session.
+                    </p>
+                    <button class="account-modal-guest-btn" onclick="window.location.href='/login'">
+                        Create account / Login
+                    </button>
+                `;
+            } else {
+                const created = formatDateString(state.createdAt);
+                dom.accountModalBody.innerHTML = `
+                    <div class="account-modal-row">
+                        <div class="account-modal-row-label">Username</div>
+                        <div class="account-modal-row-value">${state.username || '-'}</div>
+                    </div>
+                    <div class="account-modal-row">
+                        <div class="account-modal-row-label">Email</div>
+                        <div class="account-modal-row-value">${state.email || '-'}</div>
+                    </div>
+                    <div class="account-modal-row">
+                        <div class="account-modal-row-label">Account created at</div>
+                        <div class="account-modal-row-value">${created}</div>
+                    </div>
+                    <div style="font-size:11px; color:rgba(168,157,148,0.9); margin-top:4px;">
+                        These details are linked to your Coffee AI account.
+                    </div>
+                `;
+            }
+        }
+
+        function updateChatTitleDisplay() {
+            if (!dom.chatTitleDisplay) return;
+
+            if (state.isGuest) {
+                dom.chatTitleDisplay.textContent = 'Guest session';
+                return;
+            }
+
+            let title = 'New Chat';
+            if (state.activeChatId && state.chats.length > 0) {
+                const chat = state.chats.find(c => c.id === state.activeChatId);
+                if (chat && chat.title) {
+                    title = chat.title;
+                }
+            }
+            dom.chatTitleDisplay.textContent = title;
+        }
+
         async function loadUser() {
-            const me = await api('/api/auth/me');
-            state.username = me.username;
-            dom.username.textContent = me.username;
+            // نستخدم /api/whoami المفتوح للجميع
+            const me = await apiPublic('/api/whoami');
+            state.isGuest = me.is_guest;
+            state.username = me.username || 'Guest';
+            state.email = me.email || null;
+            state.createdAt = me.created_at || null;
+            dom.username.textContent = state.username;
+
+            if (state.isGuest && dom.logoutBtn) {
+                dom.logoutBtn.textContent = 'Sign up / Login';
+            }
+
+            updateAccountDetailsUI();
+            updateChatTitleDisplay();
         }
 
         async function loadChats() {
+            // الضيف: لا نحاول تحميل محادثات من الـ API
+            if (state.isGuest) {
+                state.chats = [];
+                renderMessages([]);
+                renderChats();
+                updateChatTitleDisplay();
+                return;
+            }
+
             state.chats = await api('/api/chats');
             if (state.chats.length > 0) {
                 if (!state.activeChatId) {
@@ -813,6 +1229,7 @@
                 renderMessages([]);
             }
             renderChats();
+            updateChatTitleDisplay();
         }
 
         async function selectChat(id) {
@@ -821,6 +1238,7 @@
             const msgs = await api(`/api/chats/${id}/messages`);
             renderMessages(msgs);
             renderChats();
+            updateChatTitleDisplay();
 
             if (window.innerWidth <= 768) {
                 toggleSidebar(false);
@@ -828,11 +1246,18 @@
         }
 
         async function newChat() {
+            // للضيف: نخلي الزر يفتح صفحة التسجيل بدل ما يستدعي API محمية
+            if (state.isGuest) {
+                window.location.href = '/login';
+                return;
+            }
+
             const chat = await api('/api/chats', 'POST');
             state.chats.unshift(chat);
             state.activeChatId = chat.id;
             renderChats();
             renderMessages([]);
+            updateChatTitleDisplay();
         }
         window.newChat = newChat;
 
@@ -840,12 +1265,10 @@
             const text = dom.messageInput.value.trim();
             if (!text) return;
 
-            if (!state.activeChatId) {
-                await newChat();
-            }
-
-            const safeUser = text.replace(/</g, '&lt;');
             const container = dom.messagesContainer;
+
+            // نعرض رسالة المستخدم على طول
+            const safeUser = text.replace(/</g, '&lt;');
             container.innerHTML += `
                 <div class="message user">
                     <div class="message-bubble">${safeUser}</div>
@@ -859,10 +1282,24 @@
             showTyping();
 
             try {
-                const res = await api('/ask', 'POST', {
-                    chatId: state.activeChatId,
-                    question: text,
-                });
+                let res;
+
+                if (state.isGuest) {
+                    // ضيف: /ask بدون chatId وبدون حفظ
+                    res = await apiPublic('/ask', 'POST', {
+                        question: text,
+                    });
+                } else {
+                    // مستخدم مسجّل: نفس السلوك القديم
+                    if (!state.activeChatId) {
+                        await newChat();
+                    }
+
+                    res = await api('/ask', 'POST', {
+                        chatId: state.activeChatId,
+                        question: text,
+                    });
+                }
 
                 hideTyping();
 
@@ -887,11 +1324,13 @@
 
                 typeWriter(bubble, safeText, 18);
 
-                if (res.title) {
+                // تحديث عنوان الشات للمستخدم المسجّل فقط
+                if (!state.isGuest && res.title) {
                     const chat = state.chats.find(c => c.id === state.activeChatId);
                     if (chat) {
                         chat.title = res.title;
                         renderChats();
+                        updateChatTitleDisplay();
                     }
                 }
             } catch (err) {
@@ -918,37 +1357,174 @@
         window.handleKeypress = handleKeypress;
 
         async function renameChat(id) {
-            const chat = state.chats.find(c => c.id === id);
-            if (!chat) return;
-            const title = prompt('Rename chat:', chat.title);
-            if (!title || !title.trim()) return;
-
-            await api(`/api/chats/${id}`, 'PUT', { title: title.trim() });
-            chat.title = title.trim();
-            renderChats();
+            if (state.isGuest) {
+                window.location.href = '/login';
+                return;
+            }
+            openRenameChatModal(id);
         }
 
         async function deleteChat(id) {
-            if (!confirm('Delete this chat?')) return;
-            await api(`/api/chats/${id}`, 'DELETE');
-            state.chats = state.chats.filter(c => c.id !== id);
-            if (state.activeChatId === id) {
-                state.activeChatId = state.chats[0]?.id || null;
-                if (state.activeChatId) {
-                    const msgs = await api(`/api/chats/${state.activeChatId}/messages`);
-                    renderMessages(msgs);
-                } else {
-                    renderMessages([]);
-                }
+            if (state.isGuest) {
+                window.location.href = '/login';
+                return;
             }
-            renderChats();
+            openDeleteChatModal(id);
         }
 
         async function logout() {
+            // لو Guest → ودّه مباشرة لصفحة التسجيل/الدخول
+            if (state.isGuest) {
+                window.location.href = '/login';
+                return;
+            }
+
             await api('/api/auth/logout', 'POST');
             window.location.href = '/login';
         }
         window.logout = logout;
+
+        function openAccountDetails() {
+            updateAccountDetailsUI();
+            if (dom.accountModalOverlay) {
+                dom.accountModalOverlay.classList.add('visible');
+            }
+        }
+        window.openAccountDetails = openAccountDetails;
+
+        function closeAccountDetails(event) {
+            if (dom.accountModalOverlay) {
+                dom.accountModalOverlay.classList.remove('visible');
+            }
+        }
+        window.closeAccountDetails = closeAccountDetails;
+
+        // === مودال إجراءات المحادثة (Rename / Delete) ===
+
+        function openRenameChatModal(id) {
+            const chat = state.chats.find(c => c.id === id);
+            if (!chat || !dom.chatActionModalOverlay) return;
+
+            chatActionMode = 'rename';
+            chatActionChatId = id;
+
+            dom.chatActionTitle.textContent = 'Rename chat';
+            dom.chatActionConfirmBtn.textContent = 'Save';
+            dom.chatActionConfirmBtn.classList.remove('confirm-delete');
+
+            const currentTitle = chat.title || 'Untitled chat';
+
+            dom.chatActionBody.innerHTML = `
+                <div class="account-modal-row">
+                    <div class="account-modal-row-label">Current title</div>
+                    <div class="account-modal-row-value">${currentTitle}</div>
+                </div>
+                <div class="account-modal-row">
+                    <div class="account-modal-row-label">New title</div>
+                    <input id="chatRenameInput"
+                           type="text"
+                           value="${currentTitle}"
+                           style="
+                                width:100%;
+                                padding:8px 10px;
+                                border-radius:8px;
+                                border:1px solid rgba(199,161,122,0.5);
+                                background:#2A241F;
+                                color:#E8E3DD;
+                                font-size:13px;
+                           ">
+                </div>
+            `;
+
+            dom.chatActionModalOverlay.classList.add('visible');
+
+            setTimeout(() => {
+                const input = document.getElementById('chatRenameInput');
+                if (input) {
+                    input.focus();
+                    input.select();
+                }
+            }, 0);
+        }
+
+        function openDeleteChatModal(id) {
+            const chat = state.chats.find(c => c.id === id);
+            if (!chat || !dom.chatActionModalOverlay) return;
+
+            chatActionMode = 'delete';
+            chatActionChatId = id;
+
+            const title = chat.title || 'this chat';
+
+            dom.chatActionTitle.textContent = 'Delete chat';
+            dom.chatActionConfirmBtn.textContent = 'Delete';
+            dom.chatActionConfirmBtn.classList.add('confirm-delete');
+
+            dom.chatActionBody.innerHTML = `
+                <p style="margin-bottom:10px;">
+                    Are you sure you want to delete
+                    <strong>${title}</strong>?
+                </p>
+                <p style="font-size:12px; color:rgba(168,157,148,0.9);">
+                    This action cannot be undone. All messages in this conversation will be removed.
+                </p>
+            `;
+
+            dom.chatActionModalOverlay.classList.add('visible');
+        }
+
+        function closeChatActionModal(event) {
+            if (!dom.chatActionModalOverlay) return;
+            dom.chatActionModalOverlay.classList.remove('visible');
+            chatActionMode = null;
+            chatActionChatId = null;
+        }
+        window.closeChatActionModal = closeChatActionModal;
+
+        async function confirmChatAction() {
+            if (!chatActionMode || !chatActionChatId) {
+                closeChatActionModal();
+                return;
+            }
+
+            try {
+                if (chatActionMode === 'rename') {
+                    const input = document.getElementById('chatRenameInput');
+                    const newTitle = (input && input.value ? input.value : '').trim();
+                    if (!newTitle) {
+                        // نقدر نضيف رسالة خطأ صغيرة هنا، لكن مبدئياً ما نرسل الطلب
+                        return;
+                    }
+
+                    await api(`/api/chats/${chatActionChatId}`, 'PUT', { title: newTitle });
+                    const chat = state.chats.find(c => c.id === chatActionChatId);
+                    if (chat) {
+                        chat.title = newTitle;
+                    }
+                    renderChats();
+                    updateChatTitleDisplay();
+                } else if (chatActionMode === 'delete') {
+                    await api(`/api/chats/${chatActionChatId}`, 'DELETE');
+                    state.chats = state.chats.filter(c => c.id !== chatActionChatId);
+                    if (state.activeChatId === chatActionChatId) {
+                        state.activeChatId = state.chats[0]?.id || null;
+                        if (state.activeChatId) {
+                            const msgs = await api(`/api/chats/${state.activeChatId}/messages`);
+                            renderMessages(msgs);
+                        } else {
+                            renderMessages([]);
+                        }
+                    }
+                    renderChats();
+                    updateChatTitleDisplay();
+                }
+            } catch (err) {
+                console.error('Chat action error:', err);
+            } finally {
+                closeChatActionModal();
+            }
+        }
+        window.confirmChatAction = confirmChatAction;
 
         (async function init() {
             try {
@@ -956,6 +1532,7 @@
                 await loadChats();
             } catch (err) {
                 console.error(err);
+                // لو صار خطأ غريب، نودّي المستخدم لصفحة الدخول
                 window.location.href = '/login';
             }
         })();
