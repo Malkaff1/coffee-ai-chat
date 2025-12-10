@@ -2,308 +2,651 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>Coffee AI – Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coffee AI Assistant - Sign In</title>
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com">
+        
+
+    </script><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
+
     <style>
-    
-        *{margin:0;padding:0;box-sizing:border-box}
-        :root{
-            --bg-espresso:#0F0C0A;
-            --bg-charcoal:#1A1714;
-            --bg-input:#2A241F;
-            --accent-coffee:#C7A17A;
-            --accent-coffee-hover:#B58F68;
-            --text-cream:#E8E3DD;
-            --text-muted:#A89D94;
+        :root {
+            /* خلفية عامة */
+            --gradient-background-start: #0c0704;   /* espresso */
+            --gradient-background-end:   #1b120c;   /* dark coffee */
+
+            /* ألوان الـ blobs (RGB فقط) */
+            --coffee-blob-1: 199, 161, 122;  /* latte / crema */
+            --coffee-blob-2: 181, 143, 104;  /* caramel */
+            --coffee-blob-3: 108, 78, 53;    /* mocha */
+            --coffee-blob-4: 237, 209, 165;  /* milk */
+            --coffee-blob-5: 58, 39, 26;     /* deep roast */
+
+            /* ألوان النصوص والثيم */
+            --coffee-dark: #0F0B07;
+            --coffee-charcoal: #1A1714;
+            --coffee-accent: #C7A17A;
+            --coffee-accent-soft: #B58F68;
+            --coffee-cream: #E8E3DD;
+            --coffee-muted: #A89D94;
         }
-        body{
-            background:var(--bg-espresso);
-            color:var(--text-cream);
-            font-family:'Inter','Segoe UI',sans-serif;
-            min-height:100vh;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            overflow:hidden;
+
+        * {
+            box-sizing: border-box;
         }
-        body::before{
-            content:"";
-            position:fixed;
-            inset:0;
-            pointer-events:none;
-            z-index:0;
-            background:
-                radial-gradient(ellipse 50% 60% at 50% 0%,rgba(199,161,122,.12),transparent),
-                radial-gradient(ellipse 45% 50% at 50% 100%,rgba(26,23,20,.4),transparent),
-                radial-gradient(ellipse 30% 40% at 15% 20%,rgba(199,161,122,.06),transparent)
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+            color: var(--coffee-cream);
+            background: #050302;
+            overflow: hidden;
         }
-        .auth-container{
-            position:relative;
-            z-index:1;
-            width:100%;
-            max-width:420px;
-            padding:20px;
+
+        /* ===== خلفية متحركة بأسلوب component ===== */
+
+        .coffee-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            background: linear-gradient(
+                40deg,
+                var(--gradient-background-start),
+                var(--gradient-background-end)
+            );
         }
-        .auth-card{
-            background:linear-gradient(135deg,rgba(26,23,20,.7),rgba(26,23,20,.6));
-            border:1px solid rgba(199,161,122,.15);
-            backdrop-filter:blur(20px);
-            border-radius:20px;
-            padding:40px 36px;
-            box-shadow:0 20px 60px rgba(0,0,0,.4),inset 0 0 30px rgba(199,161,122,.05);
+
+        .coffee-blob {
+            position: absolute;
+            width: 80%;
+            height: 80%;
+            top: calc(50% - 40%);
+            left: calc(50% - 40%);
+            border-radius: 999px;
+            filter: blur(40px);
+            mix-blend-mode: hard-light;
+            opacity: 0.9;
         }
-        .logo-section{
-            display:flex;
-            flex-direction:column;
-            align-items:center;
-            gap:16px;
-            margin-bottom:32px;
+
+        .coffee-blob.blob-1 {
+            background: radial-gradient(
+                circle at center,
+                rgba(var(--coffee-blob-1), 0.95) 0%,
+                rgba(var(--coffee-blob-1), 0.0) 50%
+            );
+            animation: moveVertical 30s ease-in-out infinite;
         }
-        .logo-icon{
-            width:60px;height:60px;
-            background:linear-gradient(135deg,var(--accent-coffee),#D4A574);
-            border-radius:16px;
-            display:flex;align-items:center;justify-content:center;
-            font-size:32px;
-            box-shadow:0 12px 24px rgba(199,161,122,.3);
+
+        .coffee-blob.blob-2 {
+            background: radial-gradient(
+                circle at center,
+                rgba(var(--coffee-blob-2), 0.8) 0%,
+                rgba(var(--coffee-blob-2), 0.0) 55%
+            );
+            transform-origin: calc(50% - 300px) center;
+            animation: moveInCircleReverse 24s linear infinite;
         }
-        .logo-text{
-            font-size:24px;font-weight:700;
-            background:linear-gradient(to right,var(--accent-coffee),#D4A574);
-            -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+
+        .coffee-blob.blob-3 {
+            background: radial-gradient(
+                circle at center,
+                rgba(var(--coffee-blob-3), 0.85) 0%,
+                rgba(var(--coffee-blob-3), 0.0) 52%
+            );
+            transform-origin: calc(50% + 320px) center;
+            animation: moveInCircle 40s linear infinite;
         }
-        .auth-title{font-size:24px;font-weight:700;text-align:center;color:var(--text-cream);margin-bottom:12px}
-        .auth-subtitle{font-size:13px;text-align:center;color:var(--text-muted);margin-bottom:28px}
-        .form-group{display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
-        .form-label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted)}
-        .input-field{
-            background:var(--bg-input);
-            border:1px solid rgba(199,161,122,.2);
-            border-radius:12px;
-            padding:14px 16px;
-            color:var(--text-cream);
-            font-size:14px;
-            transition:all .3s ease;
-            font-family:inherit;
+
+        .coffee-blob.blob-4 {
+            background: radial-gradient(
+                circle at center,
+                rgba(var(--coffee-blob-4), 0.75) 0%,
+                rgba(var(--coffee-blob-4), 0.0) 55%
+            );
+            transform-origin: calc(50% - 180px) calc(50% - 260px);
+            animation: moveHorizontal 36s ease-in-out infinite;
+            opacity: 0.8;
         }
-        .input-field::placeholder{color:rgba(232,227,221,.4)}
-        .input-field:focus{
-            outline:none;border-color:var(--accent-coffee);
-            background:rgba(42,36,31,.95);
-            box-shadow:0 0 20px rgba(199,161,122,.2),inset 0 0 10px rgba(199,161,122,.05);
+
+        .coffee-blob.blob-5 {
+            background: radial-gradient(
+                circle at center,
+                rgba(var(--coffee-blob-5), 0.9) 0%,
+                rgba(var(--coffee-blob-5), 0.0) 58%
+            );
+            transform-origin: calc(50% - 260px) calc(50% + 360px);
+            animation: moveInCircle 28s ease-in-out infinite;
+            opacity: 0.9;
         }
-        .submit-btn{
-            width:100%;
-            background:linear-gradient(135deg,var(--accent-coffee),#D4A574);
-            color:#1A1714;border:none;
-            padding:14px 16px;border-radius:12px;
-            font-weight:700;font-size:14px;
-            cursor:pointer;transition:all .3s ease;
-            box-shadow:0 8px 20px rgba(199,161,122,.25);
-            text-transform:uppercase;letter-spacing:.5px;
+
+        @keyframes moveVertical {
+            0%   { transform: translateY(-12%); }
+            50%  { transform: translateY(12%); }
+            100% { transform: translateY(-12%); }
         }
-        .submit-btn:hover{
-            background:linear-gradient(135deg,#D4A574,var(--accent-coffee));
-            transform:translateY(-2px);
-            box-shadow:0 12px 28px rgba(199,161,122,.35);
+
+        @keyframes moveHorizontal {
+            0% {
+                transform: translateX(-18%) translateY(-8%);
+            }
+            50% {
+                transform: translateX(18%) translateY(8%);
+            }
+            100% {
+                transform: translateX(-18%) translateY(-8%);
+            }
         }
-        .submit-btn:active{transform:translateY(0)}
-        .auth-switch{text-align:center;font-size:13px;color:var(--text-muted);margin-top:20px}
-        .auth-switch a{color:var(--accent-coffee);text-decoration:none;font-weight:600;transition:all .2s}
-        .auth-switch a:hover{color:#D4A574;text-decoration:underline}
-        .error-message,.success-message{
-            padding:12px 14px;border-radius:10px;font-size:13px;margin-bottom:16px;display:none;
+
+        @keyframes moveInCircle {
+            0% {
+                transform: rotate(0deg) translateX(0) translateY(0);
+            }
+            50% {
+                transform: rotate(180deg) translateX(4%) translateY(-6%);
+            }
+            100% {
+                transform: rotate(360deg) translateX(0) translateY(0);
+            }
         }
-        .error-message{background:rgba(255,107,107,.1);border:1px solid rgba(255,107,107,.3);color:#FF8787}
-        .success-message{background:rgba(76,222,128,.1);border:1px solid rgba(76,222,128,.3);color:#51CF66}
-        .error-message.show,.success-message.show{display:block;animation:slideIn .3s ease}
-        @keyframes slideIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
-        .hidden{display:none!important}
-        @media(max-width:480px){
-            .auth-card{padding:28px 20px}
-            .auth-title{font-size:20px}
-            .logo-icon{width:50px;height:50px;font-size:28px}
-            .logo-text{font-size:20px}
+
+        @keyframes moveInCircleReverse {
+            0% {
+                transform: rotate(360deg) translateX(0) translateY(0);
+            }
+            50% {
+                transform: rotate(180deg) translateX(-4%) translateY(4%);
+            }
+            100% {
+                transform: rotate(0deg) translateX(0) translateY(0);
+            }
+        }
+
+        /* طبقة noise خفيفة */
+        .bg-noise-overlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.12;
+            z-index: 1;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='noStitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+        }
+
+        /* ===== كارد تسجيل الدخول (نفس الديزاين السابق) ===== */
+
+        .glass-card {
+            backdrop-filter: blur(22px);
+            background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.05), transparent 45%)
+                        ,rgba(9, 7, 5, 0.92);
+            border-radius: 28px;
+            border: 1px solid rgba(199, 161, 122, 0.28);
+            box-shadow:
+                0 24px 60px rgba(0, 0, 0, 0.7),
+                0 0 0 1px rgba(0, 0, 0, 0.7);
+        }
+
+        .pill-switch {
+            background: rgba(15, 11, 7, 0.9);
+            border-radius: 999px;
+            padding: 4px;
+            border: 1px solid rgba(199, 161, 122, 0.35);
+        }
+
+        .pill-tab {
+            border-radius: 999px;
+            font-size: 0.8rem;
+            padding: 6px 16px;
+            font-weight: 500;
+            transition: all 0.18s ease;
+        }
+
+        .pill-tab-active {
+            background: linear-gradient(135deg, #6b431b, #E2C39B);
+            color: #1A1714;
+            
+        }
+
+        .pill-tab-inactive {
+            color: var(--coffee-muted);
+        }
+
+        .field-label {
+            font-size: 0.75rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: rgba(232, 227, 221, 0.7);
+        }
+
+        .field-input {
+            width: 100%;
+            border-radius: 999px;
+            border: 1px solid rgba(199, 161, 122, 0.2);
+            background: rgba(13, 10, 8, 0.92);
+            color: var(--coffee-cream);
+            font-size: 0.9rem;
+            padding: 10px 16px;
+            transition: all 0.18s ease;
+        }
+
+        .field-input::placeholder {
+            color: rgba(168, 157, 148, 0.65);
+        }
+
+        .field-input:focus {
+            outline: none;
+            border-color: var(--coffee-accent);
+            box-shadow: 0 0 0 1px rgba(199, 161, 122, 0.4),
+                        0 0 24px rgba(199, 161, 122, 0.28);
+            background: rgba(18, 14, 11, 0.98);
+        }
+
+        .btn-primary {
+            border-radius: 999px;
+            background: linear-gradient(135deg, #6b431b, #E6C596);
+            color: #1A1714;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 10px 16px;
+            border: none;
+            width: 100%;
+            box-shadow: 0 12px 28px rgba(104, 71, 38, 0.45);
+            transition: all 0.18s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 16px 36px rgba(199, 161, 122, 0.6);
+            filter: brightness(1.05);
+        }
+
+        .btn-outline {
+            border-radius: 999px;
+            border: 1px solid rgba(199, 161, 122, 0.5);
+            color: var(--coffee-cream);
+            font-size: 0.85rem;
+            padding: 9px 16px;
+            background: rgba(10, 8, 6, 0.9);
+            transition: all 0.18s ease;
+        }
+
+        .btn-outline:hover {
+            background: rgba(23, 18, 13, 0.96);
+            border-color: rgba(230, 193, 148, 0.9);
+        }
+
+        .btn-ghost {
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: rgba(232, 227, 221, 0.92);
+            font-size: 0.85rem;
+            padding: 9px 14px;
+            background: rgba(7, 5, 4, 0.86);
+            transition: all 0.18s ease;
+        }
+
+        .btn-ghost:hover {
+            background: rgba(17, 13, 10, 0.96);
+            border-color: rgba(199, 161, 122, 0.5);
+        }
+
+        .error-box {
+            border-radius: 12px;
+            border: 1px solid rgba(255, 87, 87, 0.5);
+            background: rgba(45, 16, 16, 0.92);
+            color: #FCA5A5;
+            font-size: 0.8rem;
+            padding: 8px 10px;
+        }
+
+        .success-box {
+            border-radius: 12px;
+            border: 1px solid rgba(56, 142, 101, 0.7);
+            background: rgba(9, 46, 32, 0.92);
+            color: #BBF7D0;
+            font-size: 0.8rem;
+            padding: 8px 10px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                overflow: auto;
+            }
         }
     </style>
 </head>
 <body>
-<div class="auth-container">
-    <div class="auth-card">
-        <div class="logo-section">
-          
-            <div class="logo-text">Coffee AI Assistant</div>
-        </div>
-        <div class="mt-4 text-center">
-    <a href="/guest-login"
-       class="inline-block px-4 py-2 rounded-lg bg-[#2A241F] 
-              text-[#C7A17A] border border-[#C7A17A] hover:bg-[#3A332C] transition">
-        Continue without login
-    </a>
-</div>
+    <!-- خلفية متحركة ستايل background-gradient-animation ولكن بألوان القهوة -->
+    <div class="coffee-bg">
+        <div class="coffee-blob blob-1"></div>
+        <div class="coffee-blob blob-2"></div>
+        <div class="coffee-blob blob-3"></div>
+        <div class="coffee-blob blob-4"></div>
+        <div class="coffee-blob blob-5"></div>
+    </div>
+    <div class="bg-noise-overlay"></div>
 
-
-        <!-- LOGIN -->
-        <div id="login-section">
-            <h2 class="auth-title">Welcome Back</h2>
-            <p class="auth-subtitle">Sign in to continue your coffee journey</p>
-
-            <div id="login-error" class="error-message"></div>
-            <div id="login-success" class="success-message"></div>
-
-            <form id="login-form">
-                <div class="form-group">
-                    <label class="form-label">Email Address</label>
-<input type="email" id="login-email" class="input-field" placeholder="you@example.com" required />
+    <!-- المحتوى الرئيسي فوق الخلفية -->
+    <div class="relative z-10 min-h-screen flex items-center justify-center px-4 py-6">
+        <div class="w-full max-w-4xl glass-card p-6 md:p-8 lg:p-10">
+            <!-- الشريط العلوي الصغير (لوغو + guest) -->
+            <div class="flex items-center justify-between gap-4 mb-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-2xl bg-gradient-to-br from-[#C7A17A] to-[#8A5A33] flex items-center justify-center shadow-lg shadow-black/60">
+                        <img src="{{ url_for('static', filename='logo.png') }}" alt="Coffee AI" class="w-7 h-7 object-contain">
+                    </div>
+                    <div>
+                        <div class="text-xs uppercase tracking-[0.2em] text-[rgba(232,227,221,0.7)]">
+                            Coffee AI
+                        </div>
+                        <div class="text-[0.7rem] text-[rgba(168,157,148,0.75)]">
+                            Espresso-grade coffee assistant
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Password</label>
-                    <input type="password" id="login-password" class="input-field" placeholder="Enter your password" required />
-                </div>
-                <button type="submit" class="submit-btn">Sign In</button>
-            </form>
 
-            <div class="auth-switch">
-                Don't have an account? <a href="#" id="switch-to-register">Create one</a>
+                <button
+                    type="button"
+                    id="guestBtn"
+                    class="hidden sm:inline-flex items-center gap-2 btn-ghost"
+                >
+                    <span class="text-xs">Continue without login</span>
+                </button>
             </div>
-        </div>
 
-        <!-- REGISTER -->
-        <div id="register-section" class="hidden">
-            <h2 class="auth-title">Join Us</h2>
-            <p class="auth-subtitle">Create your coffee companion account</p>
+            <div class="grid grid-cols-1 md:grid-cols-[1.15fr,0.95fr] gap-8 md:gap-10 items-center">
+                <!-- اليسار: عناوين وتسويق -->
+                <div class="space-y-6">
+                    <div>
+                        <p class="text-[0.75rem] tracking-[0.24em] uppercase text-[rgba(199,161,122,0.85)] mb-3">
+                            Welcome back to the bar
+                        </p>
+                        <h1 id="pageTitle" class="text-3xl sm:text-4xl lg:text-5xl font-semibold leading-tight">
+                            Sign in to<br />
+                            <span class="bg-gradient-to-r from-[#E6C596] via-[#C7A17A] to-[#E2D2B4] bg-clip-text text-transparent">
+                                Coffee&nbsp;AI&nbsp;Assistant
+                            </span>
+                        </h1>
+                        <p id="pageSubtitle" class="mt-3 text-[0.9rem] text-[rgba(232,227,221,0.75)] max-w-md">
+                            Log in to keep your tasting notes and recipes synced.  
+                            Or just sip as a guest — no account, just coffee.
+                        </p>
+                    </div>
 
-            <div id="register-error" class="error-message"></div>
-            <div id="register-success" class="success-message"></div>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <div class="pill-switch inline-flex">
+                            <button
+                                type="button"
+                                id="tabLogin"
+                                class="pill-tab pill-tab-active"
+                            >
+                                Log in
+                            </button>
+                            <button
+                                type="button"
+                                id="tabSignup"
+                                class="pill-tab pill-tab-inactive"
+                            >
+                                Sign up
+                            </button>
+                        </div>
+                        <button
+                            type="button"
+                            id="guestBtnMobile"
+                            class="inline-flex sm:hidden items-center btn-ghost"
+                        >
+                            Continue without login
+                        </button>
+                    </div>
 
-            <form id="register-form">
-                <div class="form-group">
-                    <label class="form-label">Username</label>
-                    <input type="text" id="register-username" class="input-field" placeholder="Choose a username" required />
+                    <div class="hidden md:block border-t border-[rgba(199,161,122,0.18)] pt-4">
+                        <p class="text-[0.78rem] text-[rgba(168,157,148,0.85)]">
+                            Tip from the barista: use a real email if you want to keep your favorite brews and chat history across devices.
+                        </p>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Email Address</label>
-                    <input
-    type="email"
-    id="register-email"
-    class="input-field"
-    placeholder="you@example.com"
-    required
-/>
 
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Password</label>
-                    <input type="password" id="register-password" class="input-field" placeholder="Create a strong password" required />
-                </div>
-                <button type="submit" class="submit-btn">Create Account</button>
-            </form>
+                <!-- اليمين: فورم login/signup -->
+                <div class="rounded-3xl border border-[rgba(199,161,122,0.28)] bg-[rgba(9,7,5,0.96)]/90 px-4 py-5 sm:px-6 sm:py-6 shadow-[0_18px_40px_rgba(0,0,0,0.9)]">
+                    <form id="authForm" class="space-y-4">
+                        <div id="alertBox" class="hidden"></div>
 
-            <div class="auth-switch">
-                Already have an account? <a href="#" id="switch-to-login">Sign in</a>
+                        <div id="usernameGroup" class="space-y-1 hidden">
+                            <label class="field-label">Username</label>
+                            <input
+                                type="text"
+                                id="usernameInput"
+                                class="field-input"
+                                placeholder="Your coffee bar name"
+                                autocomplete="username"
+                            />
+                        </div>
+
+                        <div class="space-y-1">
+                            <label class="field-label">Email</label>
+                            <input
+                                type="email"
+                                id="emailInput"
+                                class="field-input"
+                                placeholder="you@example.com"
+                                autocomplete="email"
+                                required
+                            />
+                        </div>
+
+                        <div class="space-y-1">
+                            <label class="field-label">Password</label>
+                            <input
+                                type="password"
+                                id="passwordInput"
+                                class="field-input"
+                                placeholder="Minimum 6 characters"
+                                autocomplete="current-password"
+                                required
+                            />
+                        </div>
+
+                        <div class="flex items-center justify-between text-[0.78rem] text-[rgba(168,157,148,0.9)]">
+                            <span id="modeHintLogin">
+                                Use the same email you used before to keep your chats.
+                            </span>
+                            <span id="modeHintSignup" class="hidden">
+                                Password should be at least 6 characters.
+                            </span>
+                        </div>
+
+                        <div class="pt-2 space-y-3">
+                            <button id="submitBtn" type="submit" class="btn-primary">
+                                Log in
+                            </button>
+
+                            <button
+                                type="button"
+                                id="swapModeTextBtn"
+                                class="w-full text-[0.8rem] text-[rgba(232,227,221,0.78)] hover:text-white transition"
+                            >
+                                New here? Create a free account
+                            </button>
+                        </div>
+
+                        <div class="pt-2 border-t border-[rgba(199,161,122,0.2)] mt-2">
+                            <p class="text-[0.7rem] text-[rgba(168,157,148,0.8)] leading-relaxed">
+                                By continuing, you agree to the imaginary Coffee AI Terms &amp; Privacy.  
+                                No spam — just better extractions.
+                            </p>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        let mode = "login"; // "login" | "signup"
 
+        const tabLogin = document.getElementById("tabLogin");
+        const tabSignup = document.getElementById("tabSignup");
+        const usernameGroup = document.getElementById("usernameGroup");
+        const usernameInput = document.getElementById("usernameInput");
+        const emailInput = document.getElementById("emailInput");
+        const passwordInput = document.getElementById("passwordInput");
+        const authForm = document.getElementById("authForm");
+        const alertBox = document.getElementById("alertBox");
+        const submitBtn = document.getElementById("submitBtn");
+        const pageTitle = document.getElementById("pageTitle");
+        const pageSubtitle = document.getElementById("pageSubtitle");
+        const modeHintLogin = document.getElementById("modeHintLogin");
+        const modeHintSignup = document.getElementById("modeHintSignup");
+        const swapModeTextBtn = document.getElementById("swapModeTextBtn");
+        const guestBtn = document.getElementById("guestBtn");
+        const guestBtnMobile = document.getElementById("guestBtnMobile");
 
-<script>
-    const loginSection = document.getElementById('login-section');
-    const registerSection = document.getElementById('register-section');
-    const loginForm = document.getElementById('login-form');
-    const registerForm = document.getElementById('register-form');
-    const switchToRegister = document.getElementById('switch-to-register');
-    const switchToLogin = document.getElementById('switch-to-login');
-    const loginError = document.getElementById('login-error');
-    const loginSuccess = document.getElementById('login-success');
-    const registerError = document.getElementById('register-error');
-    const registerSuccess = document.getElementById('register-success');
+        function setMode(newMode) {
+            mode = newMode;
 
-    function showMsg(el, msg) {
-        el.textContent = msg;
-        el.classList.add('show');
-        setTimeout(() => el.classList.remove('show'), 5000);
-    }
-    function clearMsgs() {
-        [loginError, loginSuccess, registerError, registerSuccess].forEach(el => {
-            el.classList.remove('show');
-            el.textContent = '';
+            if (mode === "login") {
+                tabLogin.classList.add("pill-tab-active");
+                tabLogin.classList.remove("pill-tab-inactive");
+                tabSignup.classList.add("pill-tab-inactive");
+                tabSignup.classList.remove("pill-tab-active");
+            } else {
+                tabSignup.classList.add("pill-tab-active");
+                tabSignup.classList.remove("pill-tab-inactive");
+                tabLogin.classList.add("pill-tab-inactive");
+                tabLogin.classList.remove("pill-tab-active");
+            }
+
+            if (mode === "signup") {
+                usernameGroup.classList.remove("hidden");
+                pageTitle.innerHTML = 'Create your<br><span class="bg-gradient-to-r from-[#E6C596] via-[#C7A17A] to-[#E2D2B4] bg-clip-text text-transparent">Coffee&nbsp;AI&nbsp;account</span>';
+                pageSubtitle.textContent = "Save your favorite brews, recipes, and chat history across all your devices.";
+                submitBtn.textContent = "Create account";
+                modeHintLogin.classList.add("hidden");
+                modeHintSignup.classList.remove("hidden");
+                swapModeTextBtn.textContent = "Already have an account? Log in instead";
+            } else {
+                usernameGroup.classList.add("hidden");
+                pageTitle.innerHTML = 'Sign in to<br><span class="bg-gradient-to-r from-[#E6C596] via-[#C7A17A] to-[#E2D2B4] bg-clip-text text-transparent">Coffee&nbsp;AI&nbsp;Assistant</span>';
+                pageSubtitle.textContent = "Log in to keep your tasting notes and recipes synced. Or just sip as a guest — no account, just coffee.";
+                submitBtn.textContent = "Log in";
+                modeHintLogin.classList.remove("hidden");
+                modeHintSignup.classList.add("hidden");
+                swapModeTextBtn.textContent = "New here? Create a free account";
+            }
+
+            clearAlert();
+        }
+
+        function showError(message) {
+            alertBox.className = "error-box";
+            alertBox.textContent = message;
+            alertBox.classList.remove("hidden");
+        }
+
+        function showSuccess(message) {
+            alertBox.className = "success-box";
+            alertBox.textContent = message;
+            alertBox.classList.remove("hidden");
+        }
+
+        function clearAlert() {
+            alertBox.classList.add("hidden");
+            alertBox.textContent = "";
+        }
+
+        function validateEmail(email) {
+            const re = /.+@.+\..+/;
+            return re.test(email);
+        }
+
+        async function api(endpoint, method = "POST", bodyObj = null) {
+            const res = await fetch(endpoint, {
+                method,
+                headers: { "Content-Type": "application/json" },
+                body: bodyObj ? JSON.stringify(bodyObj) : null,
+            });
+            let data = null;
+            try {
+                data = await res.json();
+            } catch (e) {
+                data = {};
+            }
+            if (!res.ok) {
+                const msg = data.message || data.error || "Request failed";
+                throw new Error(msg);
+            }
+            return data;
+        }
+
+        tabLogin.addEventListener("click", () => setMode("login"));
+        tabSignup.addEventListener("click", () => setMode("signup"));
+        swapModeTextBtn.addEventListener("click", () => {
+            setMode(mode === "login" ? "signup" : "login");
         });
-    }
 
-    switchToRegister.addEventListener('click', (e) => {
-        e.preventDefault();
-        clearMsgs();
-        loginSection.classList.add('hidden');
-        registerSection.classList.remove('hidden');
-    });
-
-    switchToLogin.addEventListener('click', (e) => {
-        e.preventDefault();
-        clearMsgs();
-        registerSection.classList.add('hidden');
-        loginSection.classList.remove('hidden');
-    });
-
-    loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        clearMsgs();
-        const email = document.getElementById('login-email').value.trim();
-        const password = document.getElementById('login-password').value;
-        if (!email.includes('@')) {
-            showMsg(loginError, 'Please enter a valid email address');
-            return;
-        }
-        try {
-            const res = await fetch('/api/auth/login', {
-                method: 'POST',
-                headers: {'Content-Type':'application/json'},
-                body: JSON.stringify({ email, password })
+        if (guestBtn) {
+            guestBtn.addEventListener("click", () => {
+                window.location.href = "/chat";
             });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.message || 'Login failed');
-            showMsg(loginSuccess, 'Sign in successful! Redirecting...');
-            setTimeout(() => window.location.href = '/chat', 1000);
-        } catch (err) {
-            showMsg(loginError, err.message);
         }
-    });
-
-    registerForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        clearMsgs();
-        const username = document.getElementById('register-username').value.trim();
-        const email = document.getElementById('register-email').value.trim();
-        const password = document.getElementById('register-password').value;
-        if (username.length < 3) {
-            showMsg(registerError, 'Username must be at least 3 characters');
-            return;
-        }
-        if (!email.includes('@')) {
-            showMsg(registerError, 'Please enter a valid email address');
-            return;
-        }
-        if (password.length < 6) {
-            showMsg(registerError, 'Password must be at least 6 characters');
-            return;
-        }
-        try {
-            const res = await fetch('/api/auth/register', {
-                method: 'POST',
-                headers: {'Content-Type':'application/json'},
-                body: JSON.stringify({ username, email, password })
+        if (guestBtnMobile) {
+            guestBtnMobile.addEventListener("click", () => {
+                window.location.href = "/chat";
             });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.message || 'Registration failed');
-            showMsg(registerSuccess, 'Account created! You can sign in now.');
-            setTimeout(() => {
-                switchToLogin.click();
-            }, 1000);
-        } catch (err) {
-            showMsg(registerError, err.message);
         }
+
+        authForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            clearAlert();
+
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+            const username = usernameInput.value.trim();
+
+            if (!email || !password || (mode === "signup" && !username)) {
+                showError("Please fill in all required fields.");
+                return;
+            }
+            if (!validateEmail(email)) {
+                showError("Please enter a valid email address.");
+                return;
+            }
+            if (password.length < 6) {
+                showError("Password must be at least 6 characters.");
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = mode === "login" ? "Signing in..." : "Creating account...";
+
+            try {
+                if (mode === "login") {
+                    await api("/api/auth/login", "POST", { email, password });
+                    window.location.href = "/chat";
+                } else {
+                    await api("/api/auth/register", "POST", {
+                        username,
+                        email,
+                        password
+                    });
+                    showSuccess("Account created! You can log in now.");
+                    setMode("login");
+                }
+            } catch (err) {
+                showError(err.message || "Something went wrong.");
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = mode === "login" ? "Log in" : "Create account";
+            }
+        });
+
+        setMode("login");
     });
-</script>
+    </script>
 </body>
 </html>
