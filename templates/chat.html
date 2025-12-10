@@ -737,7 +737,6 @@
             }
         }
 
-        /* حالة إخفاء السايدبار في الكمبيوتر فقط */
         @media (min-width: 769px) {
             body.sidebar-collapsed .sidebar {
                 display: none;
@@ -957,7 +956,6 @@
             step();
         }
 
-        // API عام لا يحوّل لـ /login (لـ /api/whoami و /ask للضيف)
         async function apiPublic(endpoint, method = 'GET', body = null) {
             const res = await fetch(endpoint, {
                 method,
@@ -979,7 +977,6 @@
             return data;
         }
 
-        // API محمي: لو 401 يحوّل لـ /login
         async function api(endpoint, method = 'GET', body = null) {
             const res = await fetch(endpoint, {
                 method,
@@ -1002,7 +999,6 @@
             const list = dom.chatList;
             list.innerHTML = '';
 
-            // لو المستخدم ضيف: ما فيه قائمة محادثات حقيقية
             if (state.isGuest) {
                 list.innerHTML = `
                     <div style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 20px;">
@@ -1192,7 +1188,6 @@
         }
 
         async function loadUser() {
-            // نستخدم /api/whoami المفتوح للجميع
             const me = await apiPublic('/api/whoami');
             state.isGuest = me.is_guest;
             state.username = me.username || 'Guest';
@@ -1209,7 +1204,6 @@
         }
 
         async function loadChats() {
-            // الضيف: لا نحاول تحميل محادثات من الـ API
             if (state.isGuest) {
                 state.chats = [];
                 renderMessages([]);
@@ -1246,7 +1240,6 @@
         }
 
         async function newChat() {
-            // للضيف: نخلي الزر يفتح صفحة التسجيل بدل ما يستدعي API محمية
             if (state.isGuest) {
                 window.location.href = '/login';
                 return;
@@ -1267,7 +1260,6 @@
 
             const container = dom.messagesContainer;
 
-            // نعرض رسالة المستخدم على طول
             const safeUser = text.replace(/</g, '&lt;');
             container.innerHTML += `
                 <div class="message user">
@@ -1285,12 +1277,10 @@
                 let res;
 
                 if (state.isGuest) {
-                    // ضيف: /ask بدون chatId وبدون حفظ
                     res = await apiPublic('/ask', 'POST', {
                         question: text,
                     });
                 } else {
-                    // مستخدم مسجّل: نفس السلوك القديم
                     if (!state.activeChatId) {
                         await newChat();
                     }
@@ -1324,7 +1314,6 @@
 
                 typeWriter(bubble, safeText, 18);
 
-                // تحديث عنوان الشات للمستخدم المسجّل فقط
                 if (!state.isGuest && res.title) {
                     const chat = state.chats.find(c => c.id === state.activeChatId);
                     if (chat) {
@@ -1373,7 +1362,6 @@
         }
 
         async function logout() {
-            // لو Guest → ودّه مباشرة لصفحة التسجيل/الدخول
             if (state.isGuest) {
                 window.location.href = '/login';
                 return;
@@ -1398,8 +1386,6 @@
             }
         }
         window.closeAccountDetails = closeAccountDetails;
-
-        // === مودال إجراءات المحادثة (Rename / Delete) ===
 
         function openRenameChatModal(id) {
             const chat = state.chats.find(c => c.id === id);
@@ -1492,7 +1478,6 @@
                     const input = document.getElementById('chatRenameInput');
                     const newTitle = (input && input.value ? input.value : '').trim();
                     if (!newTitle) {
-                        // نقدر نضيف رسالة خطأ صغيرة هنا، لكن مبدئياً ما نرسل الطلب
                         return;
                     }
 
@@ -1532,7 +1517,6 @@
                 await loadChats();
             } catch (err) {
                 console.error(err);
-                // لو صار خطأ غريب، نودّي المستخدم لصفحة الدخول
                 window.location.href = '/login';
             }
         })();

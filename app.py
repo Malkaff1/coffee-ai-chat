@@ -53,23 +53,27 @@ def login_page():
 
 @app.route("/chat")
 def chat_page():
-    # متاحة للضيف وللمستخدم المسجّل
     return render_template("chat.html")
+
+
+# زر "Continue without login" يوجّه مباشرة لصفحة الشات كضيف
+@app.route("/guest-login")
+def guest_login():
+    return redirect(url_for("chat_page"))
 
 
 def generate_chat_title(question: str) -> str:
     """
-    توليد عنوان مختصر وذكي من أول سؤال:
-    - يتجاهل عبارات الترحيب (hi, hello, مرحبا، السلام عليكم...)
-    - يحاول يختار الكلمات المهمة فقط (يتجاهل how, what, is, the... إلخ)
-    - يطلع عنوان قصير (٣–٤ كلمات) مثل: "V60 brewing guide"
+    توليد عنوان للمحادثة من أول رسالة ذات معنى:
+    - يشيل عبارات الترحيب في البداية
+    - يوقف عند أول ؟ أو . أو !
+    - يقص العنوان إذا كان طويل جدًا
     """
     if not question:
         return "New Chat"
 
     text = question.strip()
 
-    # 1) إزالة عبارات الترحيب من البداية
     greetings = [
         "hi", "hello", "hey", "yo",
         "مرحبا", "مرحبا!", "مرحبا،",
@@ -81,72 +85,45 @@ def generate_chat_title(question: str) -> str:
     for g in greetings:
         g_lower = g.lower()
         if lower.startswith(g_lower):
-            # قصّ التحية من البداية
             lower = lower[len(g_lower):].lstrip(" ،,!.؟")
             break
 
-    # لو بعد إزالة التحية صار فاضي، نرجع للنص الأصلي
-    base = lower if lower else text
+    if not lower:
+        lower = text
 
-    # 2) نأخذ فقط أول جملة تقريبًا
     cut_chars = [".", "?", "!", "؟", "،", "؛"]
+    first_sentence = lower
     for ch in cut_chars:
-        if ch in base:
-            base = base.split(ch)[0]
+        if ch in first_sentence:
+            first_sentence = first_sentence.split(ch)[0]
             break
 
-    base = base.strip()
-    if not base:
-        base = text.strip()
+    first_sentence = first_sentence.strip()
+    if not first_sentence:
+        first_sentence = lower.strip()
 
-    # 3) نكسر الكلمات ونشيل الـ stopwords
-    # نستخدم النسخة الأصلية للكلمات علشان نحافظ على "V60" و Capitalization
-    original_words = text.strip().split()
-    lower_words = [w.lower() for w in original_words]
-
-    stopwords = {
-        "how", "what", "when", "where", "why", "who",
-        "is", "are", "was", "were", "do", "does", "did",
-        "the", "a", "an", "to", "for", "of", "on", "in", "about",
-        "can", "could", "would", "should",
-        "please", "tell", "me",
-        # عربي
-        "هل", "ما", "ماذا", "كيف", "عن", "من", "الى", "في", "على", "لو", "اذا"
-    }
-
-    keywords = []
-    for orig, low in zip(original_words, lower_words):
-        # نتجاهل رموز بسيطة
-        if not low or all(ch in ".,!?،؛:()" for ch in low):
-            continue
-        if low in stopwords:
-            continue
-        keywords.append(orig)
-
-    # لو ما قدر يطلع كلمات مهمة، نستخدم الجملة الأساسية
-    if not keywords:
-        cleaned = base
-    else:
-        # نختار أول 3–4 كلمات مهمة
-        cleaned = " ".join(keywords[:4])
-
-    # 4) تقصير لو العنوان طويل جدًا
     max_len = 40
-    if len(cleaned) > max_len:
-        cleaned = cleaned[:max_len].rstrip() + "..."
+    if len(first_sentence) > max_len:
+        first_sentence = first_sentence[:max_len].rstrip() + "..."
 
-    return cleaned or "New Chat"
-
+    return first_sentence or "New Chat"
 
 
 @app.route("/api/whoami")
 def whoami():
+    """
+    ترجع بيانات المستخدم الحالي:
+    - إذا مسجّل دخول: is_guest = False + username/email/created_at
+    - إذا ضيف: is_guest = True + Guest
+    """
     if current_user.is_authenticated:
         return jsonify({
             "is_guest": False,
             "username": current_user.username,
             "email": current_user.email,
-            "created_at": current_user.created_at.isoformat() if hasattr(current_user, "created_at") else None,
+            "created_at": current_user.created_at.isoformat()
+            if hasattr(current_user, "created_at") and current_user.created_at
+            else None,
         })
     else:
         return jsonify({
@@ -160,11 +137,18 @@ def whoami():
 @app.route("/ask", methods=["POST"])
 def ask():
     """
+    نقطة إرسال السؤال للذكاء الاصطناعي.
+
+    - لو المستخدم ضيف (غير مسجّل):
+        * لا نستخدم chatId
+        * لا نحفظ أي شيء في قاعدة البيانات
+        * نرسل فقط system prompt + رسالة المستخدم لـ DeepSeek
+
     - لو المستخدم مسجّل:
-        يعتمد على chatId، يخزن في DB، يستخدم history، ويحدّث عنوان الشات
-        أول ما تجي رسالة "مفيدة" (ولو كانت الرسالة الثانية بعد مرحبا).
-    - لو المستخدم ضيف:
-        يتجاهل chatId، ما يخزن في DB، يرد فقط من DeepSeek.
+        * نحتاج chatId
+        * نحمّل المحادثة من قاعدة البيانات
+        * نحفظ رسالة المستخدم + رد الـ AI
+        * نرجع عنوان الشات عند أول رسالة ذات معنى
     """
     data = request.get_json() or {}
     question = (data.get("question") or "").strip()
@@ -176,12 +160,100 @@ def ask():
     if not DEEPSEEK_API_KEY:
         return jsonify({"error": "DEEPSEEK_API_KEY is missing in .env"}), 500
 
-    is_guest = not current_user.is_authenticated
+    # -------- ضيف (Guest) --------
+    if not current_user.is_authenticated:
+        ds_messages = []
 
-    # نجهز الرسائل لـ DeepSeek
+        ds_messages.append({
+            "role": "system",
+            "content": (
+                "You are an expert barista and coffee educator. "
+                "Respond like a friendly human barista talking to a customer at the counter. "
+                "For each answer, keep the length medium: not very long and not very short "
+                "(about 2–4 short paragraphs). "
+                "Start with a clear, direct answer in 1–2 sentences, then give a short explanation "
+                "in a human, story-like way when helpful (for example, describing how the coffee would taste "
+                "or what the barista would do in real life). "
+                "Be accurate and practical, focus on what the user should actually do. "
+                "Use simple language, avoid heavy technical jargon, and only use short bullet lists "
+                "(3–5 items) when they really make things clearer."
+            )
+        })
+
+        ds_messages.append({
+            "role": "user",
+            "content": question
+        })
+
+        try:
+            url = "https://api.deepseek.com/v1/chat/completions"
+            headers = {
+                "Authorization": f"Bearer {DEEPSEEK_API_KEY}",
+                "Content-Type": "application/json"
+            }
+            payload = {
+                "model": "deepseek-chat",
+                "messages": ds_messages,
+                "temperature": 0.7,
+            }
+
+            resp = requests.post(url, json=payload, headers=headers, timeout=60)
+            data = resp.json()
+
+            if resp.status_code != 200:
+                msg = data.get("error", {}).get("message", "Unknown DeepSeek error")
+                print("DeepSeek error (guest):", resp.status_code, data)
+                return jsonify({"error": f"DeepSeek API error: {msg}"}), 500
+
+            ai_answer = data["choices"][0]["message"]["content"]
+        except Exception as e:
+            print("DeepSeek exception (guest):", e)
+            return jsonify({"error": f"Failed to call DeepSeek: {e}"}), 500
+
+        # نرجع فقط رسالة الـ AI بدون تخزين
+        return jsonify({
+            "ai_message": {
+                "sender": "assistant",
+                "text": ai_answer.strip()
+            },
+            "title": None
+        })
+
+    # -------- مستخدم مسجّل (Logged in) --------
+
+    if not chat_id:
+        return jsonify({"error": "Chat ID is required"}), 400
+
+    # تأكد أن المحادثة تخص هذا المستخدم
+    conversation = Conversation.query.filter_by(
+        id=chat_id, user_id=current_user.id
+    ).first()
+
+    if not conversation:
+        return jsonify({"error": "Conversation not found"}), 404
+
+    # أول رسالة ذات معنى في هذا الشات؟
+    is_first_message = len(conversation.messages) == 0
+    if is_first_message:
+        conversation.title = generate_chat_title(question)
+        db.session.commit()
+
+    # احفظ رسالة المستخدم
+    user_msg = Message(
+        sender="user",
+        text=question,
+        conversation_id=chat_id
+    )
+    db.session.add(user_msg)
+    db.session.commit()
+
+    # حمّل الهستوري كامل
+    history = Message.query.filter_by(
+        conversation_id=chat_id
+    ).order_by(Message.timestamp.asc()).all()
+
     ds_messages = []
 
-    # system prompt للباريستا
     ds_messages.append({
         "role": "system",
         "content": (
@@ -198,75 +270,13 @@ def ask():
         )
     })
 
-    conversation = None
-    title = None
-    user_msg = None
-
-    # ============ حالة الضيف ============
-    if is_guest:
-        # ما في DB ولا chatId
+    for m in history:
+        role = "user" if m.sender == "user" else "assistant"
         ds_messages.append({
-            "role": "user",
-            "content": question
+            "role": role,
+            "content": m.text
         })
 
-    # ============ حالة المستخدم المسجّل ============
-    else:
-        if not chat_id:
-            return jsonify({"error": "Chat ID is required"}), 400
-
-        conversation = Conversation.query.filter_by(
-            id=chat_id, user_id=current_user.id
-        ).first()
-        if not conversation:
-            return jsonify({"error": "Conversation not found"}), 404
-
-        # نشوف هل العنوان الحالي تافه ونسمح بتحديثه
-        default_titles = {
-            "", "new chat", "chat", "hi", "hello",
-            "مرحبا", "سلام", "coffee chat"
-        }
-        current_title = (conversation.title or "").strip()
-        should_update_title = (
-            not current_title or current_title.lower() in default_titles
-        )
-
-        # نخزن رسالة المستخدم
-        user_msg = Message(
-            sender="user",
-            text=question,
-            conversation_id=chat_id
-        )
-        db.session.add(user_msg)
-        db.session.flush()  # يحجز id بدون commit نهائي
-
-        # نبني الـ history (من الرسائل القديمة فقط)
-        history = Message.query.filter_by(
-            conversation_id=chat_id
-        ).order_by(Message.timestamp.asc()).all()
-
-        for m in history:
-            role = "user" if m.sender == "user" else "assistant"
-            ds_messages.append({
-                "role": role,
-                "content": m.text
-            })
-
-        # نضيف رسالة المستخدم الحالية للـ API
-        ds_messages.append({
-            "role": "user",
-            "content": question
-        })
-
-        # لو العنوان الحالي تافه، نحاول نولّد عنوان جديد من هذا السؤال
-        if should_update_title:
-            new_title = generate_chat_title(question)
-            if new_title and new_title != "New Chat":
-                conversation.title = new_title
-                title = new_title
-        # لو ما حدثناه، نرجع None عشان الواجهة ما تغيّر الاسم القديم
-
-    # ============ نداء DeepSeek ============
     try:
         url = "https://api.deepseek.com/v1/chat/completions"
         headers = {
@@ -288,40 +298,27 @@ def ask():
             return jsonify({"error": f"DeepSeek API error: {msg}"}), 500
 
         ai_answer = data["choices"][0]["message"]["content"]
-
     except Exception as e:
         print("DeepSeek exception:", e)
         return jsonify({"error": f"Failed to call DeepSeek: {e}"}), 500
 
-    # ============ تخزين رد الـ AI للمستخدم المسجّل فقط ============
-    if not is_guest and conversation is not None and user_msg is not None:
-        ai_msg = Message(
-            sender="assistant",
-            text=ai_answer.strip(),
-            conversation_id=chat_id
-        )
-        db.session.add(ai_msg)
-        db.session.commit()
+    # احفظ رد الـ AI
+    ai_msg = Message(
+        sender="assistant",
+        text=ai_answer.strip(),
+        conversation_id=chat_id
+    )
+    db.session.add(ai_msg)
+    db.session.commit()
 
-        return jsonify({
-            "user_message": user_msg.to_dict(),
-            "ai_message": ai_msg.to_dict(),
-            "title": title  # لو None الواجهة ما تغيّر الاسم
-        })
-
-    # ============ رد الضيف (بدون حفظ) ============
     return jsonify({
-        "ai_message": {"text": ai_answer.strip()},
-        "title": None
+        "user_message": user_msg.to_dict(),
+        "ai_message": ai_msg.to_dict(),
+        "title": conversation.title if is_first_message else None
     })
 
 
-    # ============ رد الضيف (بدون حفظ) ============
-    return jsonify({
-        "ai_message": {"text": ai_answer.strip()},
-        "title": None
-    })
-
+# ---------- AUTH ROUTES ----------
 
 @app.route("/api/auth/register", methods=["POST"])
 def register():
@@ -330,8 +327,6 @@ def register():
     username = (data.get("username") or "").strip()
     email = (data.get("email") or "").strip()
     password = (data.get("password") or "").strip()
-
-    print("REGISTER TRY:", repr(username), repr(email))
 
     if not username or not email or not password:
         return jsonify({"message": "All fields are required"}), 400
@@ -348,7 +343,6 @@ def register():
     existing_user = User.query.filter(
         (User.email == email) | (User.username == username)
     ).first()
-
     if existing_user:
         return jsonify({"message": "User with this email or username already exists."}), 409
 
@@ -395,6 +389,8 @@ def get_me():
         "email": current_user.email
     }), 200
 
+
+# ---------- CHATS API (مسجّلين فقط) ----------
 
 @app.route("/api/chats", methods=["GET"])
 @login_required
