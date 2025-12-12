@@ -5,13 +5,11 @@
     <title>Coffee AI – Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Tailwind CDN -->
-    <script src="https://cdn.tailwindcss.com">
-        
+    <script src="https://cdn.tailwindcss.com"></script>
 
-    </script><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
 
     <style>
         :root {
@@ -177,12 +175,12 @@
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='noStitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
         }
 
-        /* ===== كارد تسجيل الدخول (نفس الديزاين السابق) ===== */
+        /* ===== كارد تسجيل الدخول ===== */
 
         .glass-card {
             backdrop-filter: blur(22px);
-            background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.05), transparent 45%)
-                        ,rgba(9, 7, 5, 0.92);
+            background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.05), transparent 45%),
+                        rgba(9, 7, 5, 0.92);
             border-radius: 28px;
             border: 1px solid rgba(199, 161, 122, 0.28);
             box-shadow:
@@ -208,7 +206,6 @@
         .pill-tab-active {
             background: linear-gradient(135deg, #6b431b, #E2C39B);
             color: #1A1714;
-            
         }
 
         .pill-tab-inactive {
@@ -240,8 +237,9 @@
         .field-input:focus {
             outline: none;
             border-color: var(--coffee-accent);
-            box-shadow: 0 0 0 1px rgba(199, 161, 122, 0.4),
-                        0 0 24px rgba(199, 161, 122, 0.28);
+            box-shadow:
+                0 0 0 1px rgba(199, 161, 122, 0.4),
+                0 0 24px rgba(199, 161, 122, 0.28);
             background: rgba(18, 14, 11, 0.98);
         }
 
@@ -349,12 +347,13 @@
                     </div>
                 </div>
 
+                <!-- زر الضيف (ديسكتوب) -->
                 <button
                     type="button"
                     id="guestBtn"
                     class="hidden sm:inline-flex items-center gap-2 btn-ghost"
                 >
-                    <span class="text-xs">Continue without login</span>
+                    Continue without login
                 </button>
             </div>
 
@@ -394,6 +393,7 @@
                                 Sign up
                             </button>
                         </div>
+                        <!-- زر الضيف (موبايل) -->
                         <button
                             type="button"
                             id="guestBtnMobile"
@@ -489,22 +489,22 @@
     document.addEventListener("DOMContentLoaded", () => {
         let mode = "login"; // "login" | "signup"
 
-        const tabLogin = document.getElementById("tabLogin");
-        const tabSignup = document.getElementById("tabSignup");
-        const usernameGroup = document.getElementById("usernameGroup");
-        const usernameInput = document.getElementById("usernameInput");
-        const emailInput = document.getElementById("emailInput");
-        const passwordInput = document.getElementById("passwordInput");
-        const authForm = document.getElementById("authForm");
-        const alertBox = document.getElementById("alertBox");
-        const submitBtn = document.getElementById("submitBtn");
-        const pageTitle = document.getElementById("pageTitle");
-        const pageSubtitle = document.getElementById("pageSubtitle");
-        const modeHintLogin = document.getElementById("modeHintLogin");
-        const modeHintSignup = document.getElementById("modeHintSignup");
+        const tabLogin        = document.getElementById("tabLogin");
+        const tabSignup       = document.getElementById("tabSignup");
+        const usernameGroup   = document.getElementById("usernameGroup");
+        const usernameInput   = document.getElementById("usernameInput");
+        const emailInput      = document.getElementById("emailInput");
+        const passwordInput   = document.getElementById("passwordInput");
+        const authForm        = document.getElementById("authForm");
+        const alertBox        = document.getElementById("alertBox");
+        const submitBtn       = document.getElementById("submitBtn");
+        const pageTitle       = document.getElementById("pageTitle");
+        const pageSubtitle    = document.getElementById("pageSubtitle");
+        const modeHintLogin   = document.getElementById("modeHintLogin");
+        const modeHintSignup  = document.getElementById("modeHintSignup");
         const swapModeTextBtn = document.getElementById("swapModeTextBtn");
-        const guestBtn = document.getElementById("guestBtn");
-        const guestBtnMobile = document.getElementById("guestBtnMobile");
+        const guestBtn        = document.getElementById("guestBtn");
+        const guestBtnMobile  = document.getElementById("guestBtnMobile");
 
         function setMode(newMode) {
             mode = newMode;
@@ -589,6 +589,7 @@
             setMode(mode === "login" ? "signup" : "login");
         });
 
+        // أزرار الضيف => /chat
         if (guestBtn) {
             guestBtn.addEventListener("click", () => {
                 window.location.href = "/chat";
@@ -604,7 +605,7 @@
             e.preventDefault();
             clearAlert();
 
-            const email = emailInput.value.trim();
+            const email    = emailInput.value.trim();
             const password = passwordInput.value.trim();
             const username = usernameInput.value.trim();
 

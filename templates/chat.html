@@ -940,11 +940,33 @@
             typingEl = null;
         }
 
-        async function loadUser() {
-            const me = await api('/api/auth/me');
-            state.username = me.username;
-            dom.username.textContent = me.username;
-        }
+async function loadUser() {
+    // نستخدم whoami اللي يدعم guest و user
+    const res = await fetch('/api/whoami', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+    });
+
+    if (!res.ok) {
+        throw new Error('Failed to load user');
+    }
+
+    const me = await res.json();
+
+    // نوسع state شوي
+    state.isGuest   = me.is_guest;
+    state.username  = me.username || 'Guest';
+    state.email     = me.email || null;
+    state.createdAt = me.created_at || null;
+
+    dom.username.textContent = state.username;
+
+    // لو عندك لوحة بيانات المستخدم استخدم القيم هنا:
+    // dom.userEmail.textContent = state.email || 'Guest mode';
+    // dom.userCreatedAt.textContent = state.createdAt ? ... : '—';
+}
+
 
         async function loadChats() {
             state.chats = await api('/api/chats');
