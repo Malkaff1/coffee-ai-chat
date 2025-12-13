@@ -824,23 +824,28 @@
             step();
         }
 
-        async function api(endpoint, method = 'GET', body = null) {
-            const res = await fetch(endpoint, {
-                method,
-                headers: { 'Content-Type': 'application/json' },
-                body: body ? JSON.stringify(body) : null,
-            });
-            if (res.status === 401) {
-                window.location.href = '/login';
-                return;
-            }
-            const data = await res.json();
-            if (!res.ok) {
-                const msg = data.message || data.error || 'API error';
-                throw new Error(msg);
-            }
-            return data;
-        }
+async function api(endpoint, method = 'GET', body = null) {
+  const res = await fetch(endpoint, {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+    body: body ? JSON.stringify(body) : null,
+    credentials: 'include',
+  });
+
+  
+  let data = {};
+  try { data = await res.json(); } catch (e) {}
+
+  if (!res.ok) {
+    const msg = data.message || data.error || `HTTP ${res.status}`;
+    const err = new Error(msg);
+    err.status = res.status;
+    err.data = data;
+    throw err;
+  }
+
+  return data;
+}
 
         function renderChats() {
             const list = dom.chatList;
