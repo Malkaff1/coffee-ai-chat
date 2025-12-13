@@ -59,8 +59,8 @@ def chat_page():
 # زر "Continue without login" يوجّه مباشرة لصفحة الشات كضيف
 @app.route("/guest-login")
 def guest_login():
+    session["is_guest"] = True
     return redirect(url_for("chat_page"))
-
 
 def generate_chat_title(question: str) -> str:
     """
