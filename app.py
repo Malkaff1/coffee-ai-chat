@@ -9,6 +9,8 @@ from flask_login import (
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 import requests
+from flask import Flask, request, jsonify, render_template, redirect, url_for, session
+
 
 from models import db, User, Conversation, Message
 
@@ -87,6 +89,7 @@ def generate_chat_title(question: str) -> str:
         if lower.startswith(g_lower):
             lower = lower[len(g_lower):].lstrip(" ،,!.؟")
             break
+        
 
     if not lower:
         lower = text
