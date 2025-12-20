@@ -58,7 +58,6 @@ def chat_page():
     return render_template("chat.html")
 
 
-# زر "Continue without login" يوجّه مباشرة لصفحة الشات كضيف
 @app.route("/guest-login")
 def guest_login():
     session["is_guest"] = True
@@ -163,7 +162,6 @@ def ask():
     if not DEEPSEEK_API_KEY:
         return jsonify({"error": "DEEPSEEK_API_KEY is missing in .env"}), 500
 
-    # -------- ضيف (Guest) --------
     if not current_user.is_authenticated:
         ds_messages = []
 
@@ -213,7 +211,6 @@ def ask():
             print("DeepSeek exception (guest):", e)
             return jsonify({"error": f"Failed to call DeepSeek: {e}"}), 500
 
-        # نرجع فقط رسالة الـ AI بدون تخزين
         return jsonify({
             "ai_message": {
                 "sender": "assistant",
@@ -222,12 +219,10 @@ def ask():
             "title": None
         })
 
-    # -------- مستخدم مسجّل (Logged in) --------
 
     if not chat_id:
         return jsonify({"error": "Chat ID is required"}), 400
 
-    # تأكد أن المحادثة تخص هذا المستخدم
     conversation = Conversation.query.filter_by(
         id=chat_id, user_id=current_user.id
     ).first()
@@ -235,13 +230,11 @@ def ask():
     if not conversation:
         return jsonify({"error": "Conversation not found"}), 404
 
-    # أول رسالة ذات معنى في هذا الشات؟
     is_first_message = len(conversation.messages) == 0
     if is_first_message:
         conversation.title = generate_chat_title(question)
         db.session.commit()
 
-    # احفظ رسالة المستخدم
     user_msg = Message(
         sender="user",
         text=question,
@@ -250,7 +243,6 @@ def ask():
     db.session.add(user_msg)
     db.session.commit()
 
-    # حمّل الهستوري كامل
     history = Message.query.filter_by(
         conversation_id=chat_id
     ).order_by(Message.timestamp.asc()).all()
@@ -305,7 +297,7 @@ def ask():
         print("DeepSeek exception:", e)
         return jsonify({"error": f"Failed to call DeepSeek: {e}"}), 500
 
-    # احفظ رد الـ AI
+    
     ai_msg = Message(
         sender="assistant",
         text=ai_answer.strip(),
@@ -321,7 +313,7 @@ def ask():
     })
 
 
-# ---------- AUTH ROUTES ----------
+
 
 @app.route("/api/auth/register", methods=["POST"])
 def register():
@@ -393,7 +385,12 @@ def get_me():
     }), 200
 
 
-# ---------- CHATS API (مسجّلين فقط) ----------
+
+
+
+
+
+
 
 @app.route("/api/chats", methods=["GET"])
 @login_required

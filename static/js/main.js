@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- STATE ---
     let state = {
         chats: [],
         activeChatId: null,
@@ -7,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
         isRegistering: false,
     };
 
-    // --- DOM Elements ---
     const dom = {
         authContainer: document.getElementById('auth-container'),
         chatContainer: document.getElementById('chat-container'),
@@ -31,7 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
         deleteChatBtn: document.getElementById('delete-chat-btn'),
     };
 
-    // --- API Abstraction ---
     const api = {
         async request(endpoint, method = 'GET', body = null) {
             const options = {
@@ -58,7 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
         sendMessage: (chatId, question) => api.request('/ask', 'POST', { chatId, question }),
     };
 
-    // --- RENDER Functions ---
     const render = {
         authForm() {
             dom.authError.textContent = '';
@@ -164,7 +160,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // --- Event Handlers ---
     const handle = {
         async initializeApp() {
             try {
@@ -264,11 +259,9 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const { user_message, ai_message, title } = await api.sendMessage(state.activeChatId, question);
 
-                // The backend already saved the user message, so we just need to add the AI one.
                 dom.messageList.appendChild(render.createMessageElement(ai_message));
                 dom.messageList.scrollTop = dom.messageList.scrollHeight;
 
-                // If it was the first message, the title might have changed.
                 if (title) {
                     const chat = state.chats.find(c => c.id === state.activeChatId);
                     if (chat) {
@@ -316,7 +309,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // --- Event Listeners ---
     dom.loginForm.addEventListener('submit', handle.login);
     dom.registerForm.addEventListener('submit', handle.register);
     dom.logoutBtn.addEventListener('click', handle.logout);
@@ -326,6 +318,5 @@ document.addEventListener('DOMContentLoaded', () => {
     dom.deleteChatBtn.addEventListener('click', handle.deleteChat);
     dom.authSwitchLink.addEventListener('click', handle.toggleAuthMode);
 
-    // --- Initial Load ---
     handle.initializeApp();
 });

@@ -1,4 +1,4 @@
-/* ===== Dark Coffee Theme (Full) ===== */
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Cairo:wght@400;600&display=swap');
 
 :root {
@@ -31,7 +31,7 @@ body {
     overflow-x: hidden;
 }
 
-/* Background Glow (Warm Café Ambiance) */
+
 body::before {
     content: "";
     position: fixed;

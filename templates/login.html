@@ -13,18 +13,15 @@
 
     <style>
         :root {
-            /* خلفية عامة */
             --gradient-background-start: #0c0704;   /* espresso */
             --gradient-background-end:   #1b120c;   /* dark coffee */
 
-            /* ألوان الـ blobs (RGB فقط) */
             --coffee-blob-1: 199, 161, 122;  /* latte / crema */
             --coffee-blob-2: 181, 143, 104;  /* caramel */
             --coffee-blob-3: 108, 78, 53;    /* mocha */
             --coffee-blob-4: 237, 209, 165;  /* milk */
             --coffee-blob-5: 58, 39, 26;     /* deep roast */
 
-            /* ألوان النصوص والثيم */
             --coffee-dark: #0F0B07;
             --coffee-charcoal: #1A1714;
             --coffee-accent: #C7A17A;
@@ -46,7 +43,6 @@
             overflow: hidden;
         }
 
-        /* ===== خلفية متحركة بأسلوب component ===== */
 
         .coffee-bg {
             position: fixed;
@@ -165,7 +161,6 @@
             }
         }
 
-        /* طبقة noise خفيفة */
         .bg-noise-overlay {
             position: fixed;
             inset: 0;
@@ -175,7 +170,6 @@
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='noStitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
         }
 
-        /* ===== كارد تسجيل الدخول ===== */
 
         .glass-card {
             backdrop-filter: blur(22px);
@@ -318,7 +312,6 @@
     </style>
 </head>
 <body>
-    <!-- خلفية متحركة ستايل background-gradient-animation ولكن بألوان القهوة -->
     <div class="coffee-bg">
         <div class="coffee-blob blob-1"></div>
         <div class="coffee-blob blob-2"></div>
@@ -328,10 +321,8 @@
     </div>
     <div class="bg-noise-overlay"></div>
 
-    <!-- المحتوى الرئيسي فوق الخلفية -->
     <div class="relative z-10 min-h-screen flex items-center justify-center px-4 py-6">
         <div class="w-full max-w-4xl glass-card p-6 md:p-8 lg:p-10">
-            <!-- الشريط العلوي الصغير (لوغو + guest) -->
             <div class="flex items-center justify-between gap-4 mb-6">
                 <div class="flex items-center gap-3">
                     <div class="w-9 h-9 rounded-2xl bg-gradient-to-br from-[#C7A17A] to-[#8A5A33] flex items-center justify-center shadow-lg shadow-black/60">
@@ -347,7 +338,6 @@
                     </div>
                 </div>
 
-                <!-- زر الضيف (ديسكتوب) -->
                 <button
                     type="button"
                     id="guestBtn"
@@ -358,7 +348,7 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-[1.15fr,0.95fr] gap-8 md:gap-10 items-center">
-                <!-- اليسار: عناوين وتسويق -->
+              
                 <div class="space-y-6">
                     <div>
                         <p class="text-[0.75rem] tracking-[0.24em] uppercase text-[rgba(199,161,122,0.85)] mb-3">
@@ -410,7 +400,6 @@
                     </div>
                 </div>
 
-                <!-- اليمين: فورم login/signup -->
                 <div class="rounded-3xl border border-[rgba(199,161,122,0.28)] bg-[rgba(9,7,5,0.96)]/90 px-4 py-5 sm:px-6 sm:py-6 shadow-[0_18px_40px_rgba(0,0,0,0.9)]">
                     <form id="authForm" class="space-y-4">
                         <div id="alertBox" class="hidden"></div>
@@ -589,7 +578,6 @@
             setMode(mode === "login" ? "signup" : "login");
         });
 
-        // أزرار الضيف => /chat
         if (guestBtn) {
             guestBtn.addEventListener("click", () => {
                 window.location.href = "/guest-login";

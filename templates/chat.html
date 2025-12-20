@@ -49,7 +49,7 @@
             width: 100%;
         }
 
-        /* ====== Coffee Animated Background (same style as login) ====== */
+        
 
         .coffee-bg {
             position: fixed;
@@ -117,8 +117,7 @@
             100% { transform: translate3d(-10%, 12%, 0); }
         }
 
-        /* SIDEBAR */
-
+       
         .sidebar {
             width: 280px;
             background: linear-gradient(to bottom, rgba(26, 23, 20, 0.6), rgba(26, 23, 20, 0.5));
@@ -298,7 +297,6 @@
             border-color: rgba(133, 82, 25, 0.5);
         }
 
-        /* CHAT AREA */
 
         .chat-area {
             flex: 1;
@@ -516,7 +514,7 @@
             100% { opacity: 0.2; transform: translateY(0); }
         }
 
-        /* زر إخفاء/إظهار السايدبار في الكمبيوتر */
+       
         .desktop-sidebar-toggle {
             position: absolute;
             top: 16px;
@@ -535,7 +533,7 @@
             z-index: 6;
         }
 
-        /* هيدر الموبايل + overlay */
+       
         .mobile-header {
             display: none;
         }
@@ -647,7 +645,7 @@
             }
         }
 
-        /* حالة إخفاء السايدبار في الكمبيوتر فقط */
+       
         @media (min-width: 769px) {
             body.sidebar-collapsed .sidebar {
                 display: none;
@@ -666,7 +664,7 @@
 </head>
 <body>
 
-    <!-- خلفية القهوة المتحركة + النويز -->
+  
     <div class="coffee-bg">
         <div class="coffee-blob blob-1"></div>
         <div class="coffee-blob blob-2"></div>
@@ -675,7 +673,6 @@
     <div class="bg-noise"></div>
 
     <div id="app">
-        <!-- SIDEBAR -->
         <div class="sidebar" id="sidebar">
             <div class="logo">
                 <div class="logo-icon">
@@ -704,17 +701,13 @@
             </div>
         </div>
 
-        <!-- Overlay للموبايل -->
         <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
-        <!-- CHAT AREA -->
         <div class="chat-area">
-            <!-- زر الكمبيوتر لإخفاء/إظهار السايدبار -->
             <button class="desktop-sidebar-toggle" onclick="toggleSidebar()">
                 ☰
             </button>
 
-            <!-- Mobile Header -->
             <div class="mobile-header">
                 <button class="menu-toggle" onclick="toggleSidebar()">
                     ☰
@@ -946,7 +939,7 @@ async function api(endpoint, method = 'GET', body = null) {
         }
 
 async function loadUser() {
-    // نستخدم whoami اللي يدعم guest و user
+ 
     const res = await fetch('/api/whoami', {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
@@ -959,13 +952,17 @@ async function loadUser() {
 
     const me = await res.json();
 
-    // نوسع state شوي
+    
     state.isGuest   = me.is_guest;
     state.username  = me.username || 'Guest';
     state.email     = me.email || null;
     state.createdAt = me.created_at || null;
 
-    dom.username.textContent = state.username;
+   if (state.isGuest) {
+  const btn = document.querySelector('.new-chat-btn');
+  if (btn) btn.style.display = 'none';
+}
+
 
 }
 
@@ -1028,10 +1025,11 @@ async function loadUser() {
             showTyping();
 
             try {
-                const res = await api('/ask', 'POST', {
-                    chatId: state.activeChatId,
-                    question: text,
-                });
+const payload = { question: text };
+if (!state.isGuest) payload.chatId = state.activeChatId;
+
+const res = await api('/ask', 'POST', payload);
+
 
                 hideTyping();
 
@@ -1113,21 +1111,31 @@ async function loadUser() {
             renderChats();
         }
 
-        async function logout() {
-            await api('/api/auth/logout', 'POST');
-            window.location.href = '/login';
-        }
-        window.logout = logout;
+(async function init() {
+  try {
+    await loadUser();
 
-        (async function init() {
-            try {
-                await loadUser();
-                await loadChats();
-            } catch (err) {
-                console.error(err);
-                window.location.href = '/login';
-            }
-        })();
+    
+    if (state.isGuest) {
+      state.chats = [];           
+      state.activeChatId = null;  
+      renderChats();
+      renderMessages([]);
+      return; 
+    }
+
+   
+    await loadChats();
+  } catch (err) {
+    console.error(err);
+
+   
+    if (state.isGuest) return;
+
+    window.location.href = '/login';
+  }
+})();
+
     });
     </script>
 </body>
